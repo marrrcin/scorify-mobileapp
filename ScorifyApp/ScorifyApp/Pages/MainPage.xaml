@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
+             xmlns:viewModels="clr-namespace:ScorifyApp.ViewModels;assembly=ScorifyApp"
+             x:Class="ScorifyApp.Pages.MainPage"
+             >
+  <StackLayout>
+    <Label Text="{x:Static scorifyApp:AppConstants.Title}" VerticalOptions="Start" HorizontalOptions="Start" FontSize="Large" x:Name="HeaderLabel"/>
+    
+    <ListView ItemsSource="{Binding Disciplines}" x:Name="DisciplinesList" ItemSelected="DisciplinesList_OnItemSelected">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <ViewCell.View>
+              <Label Text="{Binding Title}" FontSize="Medium" XAlign="Center"></Label>
+            </ViewCell.View>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+
+</ContentPage>

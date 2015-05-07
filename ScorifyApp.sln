@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScorifyApp", "ScorifyApp\ScorifyApp\ScorifyApp.csproj", "{0E5C749E-4870-498E-952C-6DD498D321AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScorifyApp.Droid", "ScorifyApp\ScorifyApp.Droid\ScorifyApp.Droid.csproj", "{46983F64-65FB-483E-8F3F-E7E85337F7E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorify.WinPhone81", "Scorify.WinPhone81\Scorify.WinPhone81.csproj", "{4B300235-9E0B-422A-8B7A-1CEFFD154F86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0E5C749E-4870-498E-952C-6DD498D321AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Release|ARM.ActiveCfg = Release|Any CPU
+		{46983F64-65FB-483E-8F3F-E7E85337F7E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|ARM.Build.0 = Debug|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|x86.ActiveCfg = Debug|x86
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|x86.Build.0 = Debug|x86
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Debug|x86.Deploy.0 = Debug|x86
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|ARM.ActiveCfg = Release|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|ARM.Build.0 = Release|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|ARM.Deploy.0 = Release|ARM
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|x86.ActiveCfg = Release|x86
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|x86.Build.0 = Release|x86
+		{4B300235-9E0B-422A-8B7A-1CEFFD154F86}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

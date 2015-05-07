@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
+             x:Class="ScorifyApp.Pages.EventTabbedPages.DescriptionTab"
+             Title="Description">
+  <StackLayout>
+    <Label Text="Description" FontSize="Large" HorizontalOptions="Start"></Label>
+    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Padding="20,20,20,20">
+      <Label x:Name="DescriptionLabel" Text="{Binding Event.Description}" LineBreakMode="WordWrap"></Label>
+    </StackLayout>
+  </StackLayout>
+    
+</ContentPage>

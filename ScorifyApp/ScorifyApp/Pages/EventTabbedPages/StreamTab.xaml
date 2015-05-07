@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
+             x:Class="ScorifyApp.Pages.EventTabbedPages.StreamTab"
+             Title="Stream">
+  <StackLayout>
+    <Label Text="Stream" FontSize="Large" HorizontalOptions="Start"></Label>
+  <StackLayout Orientation="Vertical" VerticalOptions="Fill" HorizontalOptions="Fill">
+    <ActivityIndicator HorizontalOptions="Center" IsRunning="True" x:Name="ActivityIndicator"></ActivityIndicator>
+    <ListView ItemsSource="{Binding Messages}" x:Name="MessageList"  IsVisible="False" HasUnevenRows="True">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <ViewCell.View>
+              <StackLayout Orientation="Vertical" Padding="5,0,0,0">
+                <Label Text="{Binding Content}" Font="Medium" XAlign="Start" TextColor="Green"></Label>
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="{Binding Created,StringFormat='on {0}'}"></Label>
+                </StackLayout>
+              </StackLayout>
+
+            </ViewCell.View>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+  </StackLayout>
+  
+</ContentPage>

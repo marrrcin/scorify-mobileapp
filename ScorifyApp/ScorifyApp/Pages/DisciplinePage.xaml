@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
+             x:Class="ScorifyApp.Pages.DisciplinePage">
+  <StackLayout Orientation="Vertical">
+    <Label Text="Available relations:" FontSize="Medium"></Label>
+    <ListView ItemsSource="{Binding Events}" x:Name="EventsList" HasUnevenRows="True" ItemSelected="EventsList_OnItemSelected">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <ViewCell.View>
+              <StackLayout Spacing="10" Orientation="Vertical" VerticalOptions="StartAndExpand" Padding="5,5,5,5">
+                <Label Text="{Binding Title}" FontSize="Medium" XAlign="Start" TextColor="Yellow"></Label>
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="{Binding User.Name,StringFormat='by {0}'}"></Label>
+                  <Label Text="{Binding StartDate,StringFormat='Start @ {0}'}"></Label>
+                  <Label Text="{Binding Finished,StringFormat='Finished? {0}'}"></Label>
+                </StackLayout>
+              </StackLayout>
+            </ViewCell.View>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+
+</ContentPage>

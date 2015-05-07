@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CarouselPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:eventTabbedPages="clr-namespace:ScorifyApp.Pages.EventTabbedPages;assembly=ScorifyApp"
+             x:Class="ScorifyApp.Pages.EventPage">
+  <CarouselPage.Children>
+    
+    <eventTabbedPages:StreamTab></eventTabbedPages:StreamTab>
+    <eventTabbedPages:DescriptionTab></eventTabbedPages:DescriptionTab>
+  </CarouselPage.Children>
+</CarouselPage>
