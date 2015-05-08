@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ScorifyApp.Annotations;
+using ScorifyApp.Core;
 using ScorifyApp.Models;
 
 namespace ScorifyApp.ViewModels
@@ -14,6 +15,29 @@ namespace ScorifyApp.ViewModels
     public class MainPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+
+        protected FacebookLogin _facebookLogin = new FacebookLogin();
+
+        private bool isLoggedIn = false;
+        public bool IsLoggedIn
+        {
+            set { isLoggedIn = value; OnPropertyChanged(); OnPropertyChanged("IsNotLoggedIn"); }
+            get { return isLoggedIn; }
+        }
+
+        public bool IsNotLoggedIn
+        {
+            get { return !IsLoggedIn;}
+        }
+
+        public FacebookLogin FacebookLogin
+        {
+            get
+            {
+                return _facebookLogin;
+            }
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

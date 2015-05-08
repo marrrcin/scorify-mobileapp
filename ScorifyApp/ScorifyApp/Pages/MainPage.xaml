@@ -8,7 +8,11 @@
   <StackLayout>
     <Label Text="{x:Static scorifyApp:AppConstants.Title}" VerticalOptions="Start" HorizontalOptions="Start" FontSize="Large" x:Name="HeaderLabel"/>
     
-    <ListView ItemsSource="{Binding Disciplines}" x:Name="DisciplinesList" ItemSelected="DisciplinesList_OnItemSelected">
+    <Button Text="Login with Facebook" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="Blue" TextColor="White" Clicked="Button_OnClicked"></Button>
+    
+    <WebView x:Name="FacebookWebView" IsVisible="False" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Navigated="WebView_OnNavigated" Navigating="FacebookWebView_OnNavigating">
+    </WebView>
+    <ListView IsVisible="{Binding IsLoggedIn}" VerticalOptions="StartAndExpand" ItemsSource="{Binding Disciplines}" x:Name="DisciplinesList" ItemSelected="DisciplinesList_OnItemSelected">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
@@ -19,6 +23,10 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+    
+    <Button Text="Logout" BackgroundColor="Red"  VerticalOptions="End" TextColor="White" x:Name="LogoutButton" IsVisible="{Binding IsLoggedIn}" Clicked="LogoutButton_OnClicked"></Button>
+    
+    <Label x:Name="TempLabel"/>
   </StackLayout>
 
 </ContentPage>
