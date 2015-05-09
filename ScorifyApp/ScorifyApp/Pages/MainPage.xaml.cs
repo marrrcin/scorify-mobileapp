@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
+using ScorifyApp.Core;
 using ScorifyApp.Models;
 using ScorifyApp.ViewModels;
+using Tweetinvi;
 using Xamarin.Forms;
 
 namespace ScorifyApp.Pages
@@ -35,7 +38,8 @@ namespace ScorifyApp.Pages
             //var resp = await request.GetJsonAsync<Test>();
             //TempLabel.Text = resp.title;
             await ViewModel.FacebookLogin.LoadLoginFromFile();
-            ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn; //add twitter here as || 
+            await ViewModel.TwitterLogin.LoadLoginFromFile();
+            ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn || ViewModel.TwitterLogin.LoggedIn;
         }
 
         private async void WebView_OnNavigated(object sender, WebNavigatedEventArgs e)
@@ -48,16 +52,12 @@ namespace ScorifyApp.Pages
             }
         }
 
-        private void Button_OnClicked(object sender, EventArgs e)
-        {
-            FacebookWebView.Source = new UrlWebViewSource{Url = ViewModel.FacebookLogin.LoginRequestUrl};
-        }
-
         private void FacebookWebView_OnNavigating(object sender, WebNavigatingEventArgs e)
         {
             if (!ViewModel.IsLoggedIn && e.Url.Contains("facebook") && !e.Url.Contains("access_token"))
             {
                 FacebookWebView.IsVisible = true;
+                TwitterWebView.IsVisible = false;
             }
             else
             {
@@ -68,7 +68,50 @@ namespace ScorifyApp.Pages
         private async void LogoutButton_OnClicked(object sender, EventArgs e)
         {
             await ViewModel.FacebookLogin.Logout();
-            ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn;
+            await ViewModel.TwitterLogin.Logout();
+            ViewModel.IsLoggedIn = false;
+        }
+
+        private void FacebookLoginButton_OnClicked(object sender, EventArgs e)
+        {
+            FacebookWebView.Source = new UrlWebViewSource { Url = ViewModel.FacebookLogin.LoginRequestUrl };
+        }
+
+        private void TwitterLoginButton_OnClicked(object sender, EventArgs e)
+        {
+            var url = ViewModel.TwitterLogin.LoginRequestUrl;
+            if(url != null)
+            {
+                TwitterWebView.Source = new UrlWebViewSource { Url = url };
+            }
+            else
+            {
+                TwitterWebView.IsVisible = false;
+                DisplayAlert("Sorry", "Could not login using twitter at the time, try again later...", "Cancel");
+            }
+        }
+
+        private async void TwitterWebView_OnNavigated(object sender, WebNavigatedEventArgs e)
+        {
+            var url = new Flurl.Url(e.Url);
+            if (e.Url.Contains(ViewModel.TwitterLogin.CallbackUrl) && e.Url.Contains("oauth_token"))
+            {
+                await ViewModel.TwitterLogin.ExtractCredentials(url);
+                ViewModel.IsLoggedIn = ViewModel.TwitterLogin.LoggedIn;
+            }
+        }
+
+        private void TwitterWebView_OnNavigating(object sender, WebNavigatingEventArgs e)
+        {
+            if (!ViewModel.IsLoggedIn && !e.Url.Contains(ViewModel.TwitterLogin.CallbackUrl))
+            {
+                TwitterWebView.IsVisible = true;
+                FacebookWebView.IsVisible = false;
+            }
+            else
+            {
+                TwitterWebView.IsVisible = false;
+            }
         }
     }
 }

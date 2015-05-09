@@ -7,13 +7,19 @@ using Newtonsoft.Json;
 
 namespace ScorifyApp.Core
 {
-    public class FacebookLogin
+    public class FacebookLogin : ILogin
     {
+        //you have to implement own IFacebookApi, this class is not on repo due to sensitive data inside
         protected IFacebookApi FacebookApi = new FacebookApiData();
 
         protected string FileName = "facebook.json";
 
         public string Token { set; get; }
+
+        public string TokenSecret
+        {
+            get { return Code; }
+        }
 
         public string Code { set; get; }
 

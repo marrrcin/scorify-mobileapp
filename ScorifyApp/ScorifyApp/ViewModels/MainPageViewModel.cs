@@ -19,6 +19,8 @@ namespace ScorifyApp.ViewModels
 
         protected FacebookLogin _facebookLogin = new FacebookLogin();
 
+        protected TwitterLogin _twitterLogin = new TwitterLogin();
+
         private bool isLoggedIn = false;
         public bool IsLoggedIn
         {
@@ -36,6 +38,14 @@ namespace ScorifyApp.ViewModels
             get
             {
                 return _facebookLogin;
+            }
+        }
+
+        public TwitterLogin TwitterLogin
+        {
+            get
+            {
+                return _twitterLogin;
             }
         }
 

@@ -8,9 +8,13 @@
   <StackLayout>
     <Label Text="{x:Static scorifyApp:AppConstants.Title}" VerticalOptions="Start" HorizontalOptions="Start" FontSize="Large" x:Name="HeaderLabel"/>
     
-    <Button Text="Login with Facebook" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="Blue" TextColor="White" Clicked="Button_OnClicked"></Button>
-    
+    <Button Text="Login with Facebook" x:Name="FacebookLoginButton" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="#3b5998" TextColor="White" Clicked="FacebookLoginButton_OnClicked"></Button>
+    <Button Text="Login with Twitter" x:Name="TwitterLoginButton" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="#4099FF" TextColor="White" Clicked="TwitterLoginButton_OnClicked"></Button>
+
+
     <WebView x:Name="FacebookWebView" IsVisible="False" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Navigated="WebView_OnNavigated" Navigating="FacebookWebView_OnNavigating">
+    </WebView>
+    <WebView x:Name="TwitterWebView" IsVisible="False" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Navigated="TwitterWebView_OnNavigated" Navigating="TwitterWebView_OnNavigating">
     </WebView>
     <ListView IsVisible="{Binding IsLoggedIn}" VerticalOptions="StartAndExpand" ItemsSource="{Binding Disciplines}" x:Name="DisciplinesList" ItemSelected="DisciplinesList_OnItemSelected">
       <ListView.ItemTemplate>
