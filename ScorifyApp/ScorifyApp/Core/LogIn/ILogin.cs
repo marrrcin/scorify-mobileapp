@@ -12,6 +12,8 @@ namespace ScorifyApp.Core.LogIn
 
         string TokenSecret { get; }
 
+        string UserId { get; }
+
         string LoginRequestUrl { get; }
 
         Task ExtractCredentials(Flurl.Url responseUrl);

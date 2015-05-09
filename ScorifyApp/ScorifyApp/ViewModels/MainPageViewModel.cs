@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ScorifyApp.Annotations;
 using ScorifyApp.Core;
+using ScorifyApp.Core.Data;
+using ScorifyApp.Core.LogIn;
 using ScorifyApp.Models;
 
 namespace ScorifyApp.ViewModels
@@ -56,18 +58,16 @@ namespace ScorifyApp.ViewModels
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private IEnumerable<Discipline> _disciplines;
         public IEnumerable<Discipline> Disciplines
         {
-            get
-            {
-                var disciplines = new[]
-                {
-                    new Discipline {Id = "1", Title = "Football"},
-                    new Discipline {Id = "2", Title = "Volleyball"},
-                    new Discipline {Id = "3", Title = "Basketball"}
-                };
-                return disciplines;
-            }
+            get { return _disciplines ?? new Discipline[0]; }
+            set { _disciplines = value; OnPropertyChanged(); }
+        }
+
+        public async Task LoadDisciplines()
+        {
+            Disciplines = await ApiClient.GetDisciplinesAsync();
         }
     }
 }

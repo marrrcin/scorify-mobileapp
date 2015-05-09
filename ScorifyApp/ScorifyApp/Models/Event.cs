@@ -29,4 +29,26 @@ namespace ScorifyApp.Models
 
         public bool Finished { set; get; }
     }
+
+    public class EventsCollection
+    {
+        public IEnumerable<Event> Events { set; get; }
+
+        public EventsMeta Meta { set; get; }
+
+    }
+
+    public class EventsMeta
+    {
+        public Pagination Pagination { set; get; }
+    }
+
+    public struct Pagination
+    {
+        public int per_page;
+
+        public int total_pages;
+
+        public int total_objects;
+    }
 }

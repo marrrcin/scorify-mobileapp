@@ -36,14 +36,15 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="AppConstants.cs" />
-    <Compile Include="Core\FacebookApiData.cs" />
-    <Compile Include="Core\FacebookLogin.cs" />
+    <Compile Include="Core\Data\ApiClient.cs" />
     <Compile Include="Core\FileStorage.cs" />
-    <Compile Include="Core\IFacebookApi.cs" />
-    <Compile Include="Core\ILogin.cs" />
-    <Compile Include="Core\ITwitterApi.cs" />
-    <Compile Include="Core\TwitterApiData.cs" />
-    <Compile Include="Core\TwitterLogin.cs" />
+    <Compile Include="Core\LogIn\FacebookApiData.cs" />
+    <Compile Include="Core\LogIn\FacebookLogin.cs" />
+    <Compile Include="Core\LogIn\IFacebookApi.cs" />
+    <Compile Include="Core\LogIn\ILogin.cs" />
+    <Compile Include="Core\LogIn\ITwitterApi.cs" />
+    <Compile Include="Core\LogIn\TwitterApiData.cs" />
+    <Compile Include="Core\LogIn\TwitterLogin.cs" />
     <Compile Include="Models\Discipline.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Message.cs" />

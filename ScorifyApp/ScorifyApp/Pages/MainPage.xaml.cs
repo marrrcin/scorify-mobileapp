@@ -40,6 +40,7 @@ namespace ScorifyApp.Pages
             await ViewModel.FacebookLogin.LoadLoginFromFile();
             await ViewModel.TwitterLogin.LoadLoginFromFile();
             ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn || ViewModel.TwitterLogin.LoggedIn;
+            await ViewModel.LoadDisciplines();
         }
 
         private async void WebView_OnNavigated(object sender, WebNavigatedEventArgs e)

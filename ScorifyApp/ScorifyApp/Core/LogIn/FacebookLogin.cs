@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Flurl.Http;
 using Newtonsoft.Json;
 
 namespace ScorifyApp.Core.LogIn
@@ -16,6 +18,8 @@ namespace ScorifyApp.Core.LogIn
         {
             get { return Code; }
         }
+
+        public string UserId { set; get; }
 
         public string Code { set; get; }
 
@@ -37,6 +41,7 @@ namespace ScorifyApp.Core.LogIn
                 {
                     Token = facebookLogin.Token;
                     Code = facebookLogin.Code;
+                    UserId = facebookLogin.UserId;
                     LoggedIn = true;
                 }
             }
@@ -58,6 +63,8 @@ namespace ScorifyApp.Core.LogIn
 
             Code = responseUrl.QueryParams.ContainsKey("code") ? responseUrl.QueryParams["code"].ToString() : null;
 
+            UserId = await GetUserIdAsync();
+
             var toSave = JsonConvert.SerializeObject(this);
             if (! await FileStorage.SaveToFile(FileName, toSave))
             {
@@ -69,6 +76,22 @@ namespace ScorifyApp.Core.LogIn
             {
                 LoggedIn = true;
             }
+        }
+
+        protected async Task<string> GetUserIdAsync()
+        {
+            string userId = "";
+            if (!string.IsNullOrEmpty(Token))
+            {
+                var request = new Flurl.Url(@"https://graph.facebook.com/v2.3/me");
+                request.QueryParams.Add("access_token", Token);
+                var response = await request.GetJsonAsync<Dictionary<string, string>>();
+                if (response.ContainsKey("id"))
+                {
+                    userId = response["id"];
+                }
+            }
+            return userId;
         }
 
         public async Task Logout()

@@ -12,4 +12,9 @@ namespace ScorifyApp.Models
 
         public string Title { set; get; }
     }
+
+    public class DisciplinesCollection
+    {
+        public IEnumerable<Discipline> Disciplines { set; get; }
+    }
 }

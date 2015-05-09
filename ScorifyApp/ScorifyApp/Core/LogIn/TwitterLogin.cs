@@ -27,6 +27,8 @@ namespace ScorifyApp.Core.LogIn
                     Token = twitterLogin.Token;
                     TokenSecret = twitterLogin.TokenSecret;
                     LoggedIn = true;
+                    UserId = twitterLogin.UserId;
+                    TwitterCredentials.SetCredentials(Token,TokenSecret,TwitterApi.ConsumerKey,TwitterApi.ConsumerSecret);
                 }
             }
             triedFromFile = true;
@@ -37,6 +39,8 @@ namespace ScorifyApp.Core.LogIn
         public string Token { set; get; }
 
         public string TokenSecret { set; get; }
+
+        public string UserId { set; get; }
 
         public string CallbackUrl = @"http://188.226.142.132/scorifymobileapp-callback";
 
@@ -81,6 +85,7 @@ namespace ScorifyApp.Core.LogIn
                 TwitterCredentials.SetCredentials(credentials);
                 Token = credentials.AccessToken;
                 TokenSecret = credentials.AccessTokenSecret;
+                UserId = (await UserAsync.GetLoggedUser()).IdStr;
 
                 var toSave = JsonConvert.SerializeObject(this);
                 if (!await FileStorage.SaveToFile(FileName, toSave))
