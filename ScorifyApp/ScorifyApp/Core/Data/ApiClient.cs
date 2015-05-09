@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScorifyApp.Core
+namespace ScorifyApp.Core.Data
 {
-    public interface IFacebookApi
+    public class ApiClient
     {
-        string AppId { get; }
     }
 }

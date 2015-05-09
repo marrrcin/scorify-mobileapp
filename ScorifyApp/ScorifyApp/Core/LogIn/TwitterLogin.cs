@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Flurl;
 using Newtonsoft.Json;
 using Tweetinvi;
 using Tweetinvi.Core.Interfaces.Credentials;
 
-namespace ScorifyApp.Core
+namespace ScorifyApp.Core.LogIn
 {
     public class TwitterLogin : ILogin
     {
