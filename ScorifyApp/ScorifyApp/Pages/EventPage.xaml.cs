@@ -19,9 +19,12 @@ namespace ScorifyApp.Pages
             InitializeComponent();
             ViewModel = new EventPageViewModel {Event = evnt};
             BindingContext = ViewModel;
+            Children.Add(new StreamTab(ViewModel));
+            Children.Add(new DescriptionTab(ViewModel));
+
             foreach (var tab in Children)
             {
-                tab.BindingContext = ViewModel;
+                tab.BindingContext = BindingContext;
             }
         }
 

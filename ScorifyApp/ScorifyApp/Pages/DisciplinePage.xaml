@@ -5,7 +5,10 @@
              x:Class="ScorifyApp.Pages.DisciplinePage">
   <StackLayout Orientation="Vertical">
     <Label Text="Available relations:" FontSize="Medium"></Label>
-    <ListView ItemsSource="{Binding Events}" x:Name="EventsList" HasUnevenRows="True" ItemSelected="EventsList_OnItemSelected">
+    <StackLayout Orientation="Horizontal">
+      <Entry Placeholder="search" x:Name="SearchBox" HorizontalOptions="FillAndExpand" TextChanged="SearchBox_OnTextChanged"></Entry>
+    </StackLayout>
+    <ListView ItemsSource="{Binding Filtered}" x:Name="EventsList" HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="EventsList_OnItemSelected">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>

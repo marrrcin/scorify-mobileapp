@@ -5,3 +5,4 @@ obj
 packages/
 FacebookApiData.cs
 TwitterApiData.cs
+*.suo

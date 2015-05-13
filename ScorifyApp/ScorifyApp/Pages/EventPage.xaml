@@ -3,9 +3,5 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:eventTabbedPages="clr-namespace:ScorifyApp.Pages.EventTabbedPages;assembly=ScorifyApp"
              x:Class="ScorifyApp.Pages.EventPage">
-  <CarouselPage.Children>
-    
-    <eventTabbedPages:StreamTab></eventTabbedPages:StreamTab>
-    <eventTabbedPages:DescriptionTab></eventTabbedPages:DescriptionTab>
-  </CarouselPage.Children>
+  
 </CarouselPage>

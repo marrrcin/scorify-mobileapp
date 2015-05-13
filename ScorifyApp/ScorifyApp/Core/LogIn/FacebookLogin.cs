@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
-using System;
 
 namespace ScorifyApp.Core.LogIn
 {
@@ -21,6 +20,8 @@ namespace ScorifyApp.Core.LogIn
         }
 
         public string UserId { set; get; }
+
+        public string UserEmail { set; get; }
 
         public string Code { set; get; }
 
@@ -43,10 +44,16 @@ namespace ScorifyApp.Core.LogIn
                     Token = facebookLogin.Token;
                     Code = facebookLogin.Code;
                     UserId = facebookLogin.UserId;
+                    UserEmail = facebookLogin.UserEmail;
                     LoggedIn = true;
                 }
             }
             triedFromFile = true;
+        }
+
+        private string ApiScopes
+        {
+            get { return "email"; }
         }
 
         public string LoginRequestUrl
@@ -54,7 +61,7 @@ namespace ScorifyApp.Core.LogIn
             get
             {
                 return
-                    @"https://www.facebook.com/dialog/oauth?client_id=" + FacebookApi.AppId + @"&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=code%20token";
+                    @"https://www.facebook.com/dialog/oauth?client_id=" + FacebookApi.AppId + @"&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=code%20token" + @"&scope=" + ApiScopes;
             }
         }
 
@@ -64,14 +71,18 @@ namespace ScorifyApp.Core.LogIn
 
             Code = responseUrl.QueryParams.ContainsKey("code") ? responseUrl.QueryParams["code"].ToString() : null;
 
-            UserId = await GetUserIdAsync();
+            var userInfo = await GetUserInfoAsync();
+            UserEmail = userInfo.Email;
+            UserId = userInfo.Id;
 
             var toSave = JsonConvert.SerializeObject(this);
-            if (! await FileStorage.SaveToFile(FileName, toSave))
+            if (!await FileStorage.SaveToFile(FileName, toSave))
             {
                 Token = null;
                 Code = null;
                 LoggedIn = false;
+                UserId = null;
+                UserEmail = null;
             }
             else
             {
@@ -79,20 +90,31 @@ namespace ScorifyApp.Core.LogIn
             }
         }
 
-        protected async Task<string> GetUserIdAsync()
+        protected struct UserInfo
         {
-            string userId = "";
+            public string Id;
+            public string Email;
+        }
+
+        protected async Task<UserInfo> GetUserInfoAsync()
+        {
+            var userInfo = new UserInfo();
             if (!string.IsNullOrEmpty(Token))
             {
-                var request = new Flurl.Url(@"https://graph.facebook.com/v2.3/me");
+                var request = new Flurl.Url(@"https://graph.facebook.com/v2.3/me?fields=id,email");
                 request.QueryParams.Add("access_token", Token);
                 var response = await request.GetJsonAsync<Dictionary<string, string>>();
+
                 if (response.ContainsKey("id"))
                 {
-                    userId = response["id"];
+                    userInfo.Id = response["id"];
+                }
+                if (response.ContainsKey("email"))
+                {
+                    userInfo.Email = response["email"];
                 }
             }
-            return userId;
+            return userInfo;
         }
 
         public async Task Logout()

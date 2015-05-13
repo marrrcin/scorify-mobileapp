@@ -12,25 +12,21 @@ namespace ScorifyApp.ViewModels
 {
     class DisciplinePageViewModel : INotifyPropertyChanged
     {
+        
         public Discipline Discipline { set; get; }
 
+        private IEnumerable<Event> _events;
         public IEnumerable<Event> Events
         {
-            get
-            {
-                var rand = new Random();
-                var events = Enumerable.Range(0,40).Select(i => new Event
-                {
-                    Title = "Event #" + (i+1),
-                    User = new User{Name="User"+rand.Next()},
-                    StartDate = DateTime.Now,
-                    Discipline = Discipline,
-                    Finished = rand.Next()%2 == 0,
-                    Venue = "Venue " + rand.Next()
-                });
+            get { return _events; }
+            set { _events = value; OnPropertyChanged(); }
+        }
 
-                return events.ToArray();
-            }
+        private IEnumerable<Event> _filtered;
+        public IEnumerable<Event> Filtered
+        {
+            get { return _filtered;}
+            set { _filtered = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

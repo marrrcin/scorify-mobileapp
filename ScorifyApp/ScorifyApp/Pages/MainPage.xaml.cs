@@ -79,9 +79,10 @@ namespace ScorifyApp.Pages
             FacebookWebView.Source = new UrlWebViewSource { Url = ViewModel.FacebookLogin.LoginRequestUrl };
         }
 
-        private void TwitterLoginButton_OnClicked(object sender, EventArgs e)
+        private async void TwitterLoginButton_OnClicked(object sender, EventArgs e)
         {
-            var url = ViewModel.TwitterLogin.LoginRequestUrl;
+            string url = null;
+            await Task.Factory.StartNew(() => url = ViewModel.TwitterLogin.LoginRequestUrl);
             if(url != null)
             {
                 TwitterWebView.Source = new UrlWebViewSource { Url = url };
@@ -89,7 +90,7 @@ namespace ScorifyApp.Pages
             else
             {
                 TwitterWebView.IsVisible = false;
-                DisplayAlert("Sorry", "Could not login using twitter at the time, try again later...", "Cancel");
+                await DisplayAlert("Sorry", "Could not login using twitter at the time, try again later...", "Cancel");
             }
         }
 
