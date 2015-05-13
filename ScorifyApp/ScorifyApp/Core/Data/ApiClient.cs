@@ -17,11 +17,9 @@ namespace ScorifyApp.Core.Data
     {
         public static string ApiUrl = @"http://boiling-citadel-6747.herokuapp.com/api/";
 
-        protected static FlurlClient GetFlurlClientForRequest(string apiRequest)
+        protected static Flurl.Url GetFlurlClientForRequest(string apiRequest)
         {
-            var client =  new FlurlClient(ApiUrl + apiRequest);
-            client.WithHeader("Content-Type", "application/json");
-            client.WithHeader("Accept", "application/vnd.scorify.v1");
+            var client =  new Flurl.Url(ApiUrl + apiRequest);
             return client;
         }
 
@@ -66,14 +64,17 @@ namespace ScorifyApp.Core.Data
                 var requestData = new {@event = eventData, user_id = newEvent.User.Id};
                 var requestJson = JsonConvert.SerializeObject(requestData);
                 var request = GetFlurlClientForRequest(@"disciplines/" + newEvent.Discipline.Id + @"/events");
-                var response = await request.PostJsonAsync(requestData);
+                var response = await request
+                    .WithHeader("Accept", @"application/vnd.scorify.v1")
+                    .PostJsonAsync(requestData);
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
                     return false;
                 }
 
-                var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content.ToString());
-                newEvent.Id = responseData["id"];
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<String,object>>>(responseContent);
+                newEvent.Id = responseData["event"]["id"] as string;
             }
             catch (Exception ex)
             {

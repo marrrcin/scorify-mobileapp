@@ -63,7 +63,7 @@ namespace ScorifyApp.Pages
                 
                 if (response)
                 {
-                    
+                    await Navigation.PushModalAsync(new WriteRelationPage(evnt));
                 }
                 else
                 {
