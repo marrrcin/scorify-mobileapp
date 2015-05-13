@@ -37,6 +37,7 @@
     <Compile Include="App.cs" />
     <Compile Include="AppConstants.cs" />
     <Compile Include="Core\Data\ApiClient.cs" />
+    <Compile Include="Core\Data\Utils.cs" />
     <Compile Include="Core\FileStorage.cs" />
     <Compile Include="Core\LogIn\FacebookApiData.cs" />
     <Compile Include="Core\LogIn\FacebookLogin.cs" />
@@ -64,11 +65,15 @@
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\NewRelationPage.xaml.cs">
+      <DependentUpon>NewRelationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DisciplinePageViewModel.cs" />
     <Compile Include="ViewModels\EventPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\NewEventPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -165,7 +170,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\NewRelationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\EventTabbedPages\StreamTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

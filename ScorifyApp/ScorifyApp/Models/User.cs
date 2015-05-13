@@ -9,5 +9,6 @@ namespace ScorifyApp.Models
     public class User
     {
         public string Name { set; get; }
+        public string Id { get; set; }
     }
 }

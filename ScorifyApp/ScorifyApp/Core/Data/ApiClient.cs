@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -17,7 +19,10 @@ namespace ScorifyApp.Core.Data
 
         protected static FlurlClient GetFlurlClientForRequest(string apiRequest)
         {
-            return new FlurlClient(ApiUrl + apiRequest);
+            var client =  new FlurlClient(ApiUrl + apiRequest);
+            client.WithHeader("Content-Type", "application/json");
+            client.WithHeader("Accept", "application/vnd.scorify.v1");
+            return client;
         }
 
         public async static Task<IEnumerable<Discipline>> GetDisciplinesAsync()
@@ -46,7 +51,36 @@ namespace ScorifyApp.Core.Data
 
         public static async Task<bool> CreateEventAsync(Event newEvent)
         {
-            await Task.Delay(1);
+            try
+            {
+                var eventData = new Dictionary<string,object>
+                {
+                    {"title" , newEvent.Title},
+                    {"description" , newEvent.Description},
+                    {"venue" , newEvent.Venue},
+                    {"start_date" , newEvent.StartDate.ToApiDateTimeFormat()},
+                    {"end_date" , newEvent.EndDate.ToApiDateTimeFormat()},
+                    {"contenders" , newEvent.Contenders.ToArray()}
+                };
+
+                var requestData = new {@event = eventData, user_id = newEvent.User.Id};
+                var requestJson = JsonConvert.SerializeObject(requestData);
+                var request = GetFlurlClientForRequest(@"disciplines/" + newEvent.Discipline.Id + @"/events");
+                var response = await request.PostJsonAsync(requestData);
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    return false;
+                }
+
+                var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content.ToString());
+                newEvent.Id = responseData["id"];
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+          
             return true;
         }
 

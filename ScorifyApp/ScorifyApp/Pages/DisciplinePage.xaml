@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
              x:Class="ScorifyApp.Pages.DisciplinePage">
-  <StackLayout Orientation="Vertical">
+  <StackLayout Orientation="Vertical" Padding="0,0,0,25">
     <Label Text="Available relations:" FontSize="Medium"></Label>
     <StackLayout Orientation="Horizontal">
       <Entry Placeholder="search" x:Name="SearchBox" HorizontalOptions="FillAndExpand" TextChanged="SearchBox_OnTextChanged"></Entry>
@@ -26,6 +26,8 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+    <Button x:Name="NewRelationButton" HorizontalOptions="FillAndExpand" Text="Create new relation" BackgroundColor="#5BAC23" TextColor="White" Clicked="NewRelationButton_OnClicked" VerticalOptions="End"></Button>
   </StackLayout>
+  
 
 </ContentPage>

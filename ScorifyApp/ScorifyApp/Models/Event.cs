@@ -14,20 +14,18 @@ namespace ScorifyApp.Models
 
         public string Title { set; get; }
 
-        public string Description
-        {
-            get
-            {
-                return
-                    @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam et eros et turpis blandit egestas. Sed sed turpis in tellus finibus dapibus in vitae leo. Fusce rhoncus nunc a velit mattis rhoncus. Vivamus aliquet libero sed augue condimentum, sit amet consequat sapien sodales. Nunc a tempor nisl. Vestibulum hendrerit lorem eget posuere semper. Sed dui mi, eleifend eget faucibus ac, rutrum ac diam. Praesent id risus in lacus cursus hendrerit id eget metus. Suspendisse vitae sapien dignissim, iaculis mi a, iaculis arcu. Donec quis lectus nec orci tristique venenatis non sit amet neque. Sed finibus aliquam volutpat. Sed sit amet aliquam augue. Phasellus a diam et sem suscipit ornare. Aenean malesuada sodales elit a iaculis.";
-            }
-        }
+        public string Description { set; get; }
 
         public string Venue { set; get; }
 
         public DateTime StartDate { set; get; }
 
+        public DateTime EndDate { set; get; }
+
         public bool Finished { set; get; }
+
+        public IEnumerable<Dictionary<string,object>> Contenders { set; get; }
+        public string Id { get; set; }
     }
 
     public class EventsCollection

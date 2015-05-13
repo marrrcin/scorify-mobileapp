@@ -73,5 +73,11 @@ namespace ScorifyApp.Pages
                 return toFilter;
             }
         }
+
+        private async void NewRelationButton_OnClicked(object sender, EventArgs e)
+        {
+            var discipline = ViewModel.Discipline;
+            await Navigation.PushModalAsync(new NewRelationPage(discipline));
+        }
     }
 }
