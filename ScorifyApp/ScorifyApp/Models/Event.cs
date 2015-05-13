@@ -18,9 +18,11 @@ namespace ScorifyApp.Models
 
         public string Venue { set; get; }
 
-        public DateTime StartDate { set; get; }
+        public string Start_Date { set; get; }
 
-        public DateTime EndDate { set; get; }
+        public DateTime StartDateTime { set; get; }
+
+        public DateTime EndDateTime { set; get; }
 
         public bool Finished { set; get; }
 

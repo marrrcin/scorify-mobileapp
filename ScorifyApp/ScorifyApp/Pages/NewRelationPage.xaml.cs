@@ -37,7 +37,7 @@ namespace ScorifyApp.Pages
             ViewModel.Description = "Ipsum dolor sit amet? Yolo swag";
             ViewModel.Contenders = "Arsenal,Lech Poznan";
             ViewModel.Venue = "PUT Gym";
-            ViewModel.User = new User { Id = "554de8c63731620003000000", Name = "Marcin" };
+            ViewModel.User = new User { Id = "554de8c63731620003000000", Email = "Marcin" };
 
         }
 
@@ -84,8 +84,8 @@ namespace ScorifyApp.Pages
                 Contenders =
                     ViewModel.Contenders.Split(',').Select(c => new Dictionary<string, object> {{"title", c}}).ToArray(),
                 Description = ViewModel.Description,
-                StartDate = startDate,
-                EndDate = endDate,
+                StartDateTime = startDate,
+                EndDateTime = endDate,
                 User = ViewModel.User,
                 Venue = ViewModel.Venue
             };

@@ -5,9 +5,9 @@
              xmlns:viewModels="clr-namespace:ScorifyApp.ViewModels;assembly=ScorifyApp"
              x:Class="ScorifyApp.Pages.MainPage"
              >
-  <StackLayout>
+  <StackLayout Padding="0,0,0,25">
     <Label Text="{x:Static scorifyApp:AppConstants.Title}" VerticalOptions="Start" HorizontalOptions="Start" FontSize="Large" x:Name="HeaderLabel"/>
-    
+
     <Button Text="Login with Facebook" x:Name="FacebookLoginButton" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="#3b5998" TextColor="White" Clicked="FacebookLoginButton_OnClicked"></Button>
     <Button Text="Login with Twitter" x:Name="TwitterLoginButton" IsVisible="{Binding IsNotLoggedIn}" BackgroundColor="#4099FF" TextColor="White" Clicked="TwitterLoginButton_OnClicked"></Button>
 
@@ -28,8 +28,9 @@
       </ListView.ItemTemplate>
     </ListView>
     
+    <Button Text="Your relations" VerticalOptions="End" x:Name="UserRelationsButton" IsVisible="{Binding IsLoggedIn}"></Button>
     <Button Text="Logout" BackgroundColor="Red"  VerticalOptions="End" TextColor="White" x:Name="LogoutButton" IsVisible="{Binding IsLoggedIn}" Clicked="LogoutButton_OnClicked"></Button>
-    
+
     <Label x:Name="TempLabel" Text="masakra"/>
   </StackLayout>
 

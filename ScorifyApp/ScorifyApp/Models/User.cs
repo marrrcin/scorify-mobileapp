@@ -8,7 +8,9 @@ namespace ScorifyApp.Models
 {
     public class User
     {
-        public string Name { set; get; }
+        public string Email { set; get; }
         public string Id { get; set; }
+
+        public IEnumerable<Event> Events { set; get; }
     }
 }

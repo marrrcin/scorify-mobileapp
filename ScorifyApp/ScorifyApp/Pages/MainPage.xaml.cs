@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
 using ScorifyApp.Core;
+using ScorifyApp.Core.Data;
 using ScorifyApp.Models;
 using ScorifyApp.ViewModels;
 using Tweetinvi;
@@ -41,6 +42,10 @@ namespace ScorifyApp.Pages
             await ViewModel.FacebookLogin.LoadLoginFromFile();
             await ViewModel.TwitterLogin.LoadLoginFromFile();
             ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn || ViewModel.TwitterLogin.LoggedIn;
+            if (ViewModel.IsLoggedIn)
+            {
+                //ViewModel.User = 
+            }
             await ViewModel.LoadDisciplines();
         }
 
@@ -115,6 +120,19 @@ namespace ScorifyApp.Pages
             else
             {
                 TwitterWebView.IsVisible = false;
+            }
+        }
+
+        private async void UserRelationsButton_OnClicked(object sender, EventArgs e)
+        {
+            var user = await ApiClient.GetUserDetails("554de8c63731620003000000"); //TODO pass user id here
+            if (user != null)
+            {
+                
+            }
+            else
+            {
+                await DisplayAlert("Sorry", "Something went wrong and I cannot get your events", "Cancel");
             }
         }
     }

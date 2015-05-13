@@ -21,6 +21,8 @@ namespace ScorifyApp.Pages.EventTabbedPages
 
         private volatile bool ShouldUpdateMessages = false;
 
+        private volatile bool IsPollingNow = false;
+
         private CancellationTokenSource ApiRequestCancel;
 
         private int ApiPollDelayMilliseconds = 5500;
@@ -41,9 +43,16 @@ namespace ScorifyApp.Pages.EventTabbedPages
             MessageList.BindingContext = ViewModel;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            //first request
+            ActivityIndicator.IsVisible = true;
+            ViewModel.UpdateMessages(await ApiClient.GetEventMessages(ViewModel.Event));
+            ActivityIndicator.IsVisible = false;
+
+            //message polling thread
             ApiRequestCancel = new CancellationTokenSource();
             ApiPollTask = Task.Factory.StartNew(async () =>
             {
@@ -51,7 +60,13 @@ namespace ScorifyApp.Pages.EventTabbedPages
             }
             , ApiRequestCancel.Token);
             
+            //UI refreshing thread
             Device.StartTimer(TimeSpan.FromMilliseconds(ApiPollDelayMilliseconds - 500.0),UpdateMessages);
+            Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
+            {
+                ActivityIndicator.IsVisible = IsPollingNow;
+                return ShouldPollApi;
+            });
         }
 
         private bool UpdateMessages()
@@ -90,6 +105,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
             while (ShouldPollApi)
             {
                 await Task.Delay(ApiPollDelayMilliseconds, ApiRequestCancel.Token);
+                IsPollingNow = true;
                 var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
                 var newMessages = await ApiClient.GetEventMessages(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
                 newMessages = newMessages.Except(viewModel.Messages, messageComparer);
@@ -98,6 +114,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
                     UpdatedMessages = newMessages.ToArray();
                     ShouldUpdateMessages = UpdatedMessages.Any();
                 }
+                IsPollingNow = false;
                 if (ApiRequestCancel.IsCancellationRequested)
                 {
                     break;

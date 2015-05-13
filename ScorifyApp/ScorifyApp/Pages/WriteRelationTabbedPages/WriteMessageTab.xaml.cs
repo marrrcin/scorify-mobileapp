@@ -15,6 +15,7 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
         private WriteRelationPageViewModel ViewModel;
         private string _buttonText;
         private Color _buttonColor;
+        private volatile bool IsActive = false;
 
         public WriteMessageTab(WriteRelationPageViewModel viewModel)
         {
@@ -32,15 +33,20 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
 
         private async void SendButton_OnClicked(object sender, EventArgs e)
         {
+            if (IsActive)
+            {
+                await DisplayAlert("Not so fast", "Are you in a hurry, my friend?", "nope");
+                return;
+            }
+            IsActive = true;
             UpdateActivity(true);
-            if (string.IsNullOrEmpty(ViewModel.Content) || ViewModel.Content.Length < 5 ||
+            if (string.IsNullOrEmpty(ViewModel.Content) || ViewModel.Content.Length < 4 ||
                 ViewModel.Content.Length > 128)
             {
                 await DisplayAlert("Message is incorrect", "Please write message with proper length", "Cancel");
             }
             else
             {
-                await Task.Delay(1000);
                 var msg = new Message
                 {
                     Content = ViewModel.Content,
@@ -58,6 +64,7 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
                 }
             }
             UpdateActivity(false);
+            IsActive = false;
         }
 
         private void UpdateActivity(bool isActive)

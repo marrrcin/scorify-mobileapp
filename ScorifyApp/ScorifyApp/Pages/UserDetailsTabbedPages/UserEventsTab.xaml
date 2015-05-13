@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScorifyApp.Pages.UserDetailsTabbedPages.UserEventsTab">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+      <Label Text="Your relations" FontSize="Large" HorizontalOptions="Start"></Label>
+    </StackLayout>
+    <ListView ItemsSource="{Binding User.Events}" x:Name="UserEventsList" HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <ViewCell.View>
+              <StackLayout Spacing="10" Orientation="Vertical" VerticalOptions="StartAndExpand" Padding="5,5,5,5">
+                <Label Text="{Binding Title}" FontSize="Medium" XAlign="Start" TextColor="Aqua"></Label>
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="{Binding User.Email,StringFormat='by {0}'}"></Label>
+                  <Label Text="{Binding StartDateTime,StringFormat='Start @ {0}'}"></Label>
+                  <Label Text="{Binding Finished,StringFormat='Finished? {0}'}"></Label>
+                </StackLayout>
+              </StackLayout>
+            </ViewCell.View>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+
+</ContentPage>

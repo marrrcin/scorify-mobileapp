@@ -83,7 +83,7 @@ namespace ScorifyApp.Pages
                           || ev.Description.ToLower().Contains(search)
                           || ev.Venue.ToLower().Contains(search)
                           //|| ev.User.Name.ToLower().Contains(search) TODO PUT USERNAME HERE
-                          || ev.StartDate.ToString().Contains(search)
+                          || ev.StartDateTime.ToString().Contains(search)
                     select ev;
                 return filtered.ToArray();
             }

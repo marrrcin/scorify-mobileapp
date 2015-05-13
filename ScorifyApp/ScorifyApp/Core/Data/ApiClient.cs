@@ -37,12 +37,25 @@ namespace ScorifyApp.Core.Data
             {
                 var request = GetFlurlClientForRequest("disciplines/" + discipline + "/events");
                 var response = await request.GetJsonAsync<EventsCollection>();
+                foreach (var evnt in response.Events)
+                {
+                    ParseDates(evnt);
+                }
                 return response.Events;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 return new Event[0];
+            }
+        }
+
+        private static void ParseDates(Event evnt)
+        {
+            DateTime d;
+            if (DateTime.TryParse(evnt.Start_Date, out d))
+            {
+                evnt.StartDateTime = d;
             }
         }
 
@@ -55,8 +68,8 @@ namespace ScorifyApp.Core.Data
                     {"title" , newEvent.Title},
                     {"description" , newEvent.Description},
                     {"venue" , newEvent.Venue},
-                    {"start_date" , newEvent.StartDate.ToApiDateTimeFormat()},
-                    {"end_date" , newEvent.EndDate.ToApiDateTimeFormat()},
+                    {"start_date" , newEvent.StartDateTime.ToApiDateTimeFormat()},
+                    {"end_date" , newEvent.EndDateTime.ToApiDateTimeFormat()},
                     {"contenders" , newEvent.Contenders.ToArray()}
                 };
 
@@ -121,12 +134,39 @@ namespace ScorifyApp.Core.Data
                     .SetQueryParam("after",afterTimestamp ?? 0)
                     .WithHeader("Accept", @"application/vnd.scorify.v1")
                     .GetJsonAsync<MessageCollection>();
+                foreach (var message in response.Messages)
+                {
+                    message.Created = message.Timestamp.ToDateTime();
+                }
                 return response.Messages;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 return new Message[0];
+            }
+        }
+
+        public static async Task<User> GetUserDetails(string userId)
+        {
+            try
+            {
+                var request = GetFlurlClientForRequest(@"users/" + userId);
+                var response = await request
+                    .WithHeader("Accept", @"application/vnd.scorify.v1")
+                    .GetJsonAsync<User>();
+
+                foreach (var evnt in response.Events)
+                {
+                    ParseDates(evnt);
+                    evnt.User = response;
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
             }
         }
     }
