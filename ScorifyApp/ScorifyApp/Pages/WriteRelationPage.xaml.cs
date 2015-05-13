@@ -20,7 +20,7 @@ namespace ScorifyApp.Pages
         public WriteRelationPage(Event evnt)
         {
             StreamViewModel = new EventPageViewModel {Event = evnt};
-            ViewModel=new WriteRelationPageViewModel();
+            ViewModel=new WriteRelationPageViewModel {Event = evnt};
             InitializeComponent();
             Children.Add(new WriteMessageTab(ViewModel));
             Children.Add(new StreamTab(StreamViewModel));

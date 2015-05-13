@@ -90,12 +90,13 @@ namespace ScorifyApp.Pages.EventTabbedPages
             while (ShouldPollApi)
             {
                 await Task.Delay(ApiPollDelayMilliseconds, ApiRequestCancel.Token);
-                var newMessages = await ApiClient.GetEventMessages(new Event(), DateTime.Now);
+                var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
+                var newMessages = await ApiClient.GetEventMessages(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
                 newMessages = newMessages.Except(viewModel.Messages, messageComparer);
                 lock (locker)
                 {
                     UpdatedMessages = newMessages.ToArray();
-                    ShouldUpdateMessages = true;
+                    ShouldUpdateMessages = UpdatedMessages.Any();
                 }
                 if (ApiRequestCancel.IsCancellationRequested)
                 {
@@ -109,12 +110,12 @@ namespace ScorifyApp.Pages.EventTabbedPages
         {
             public bool Equals(Message x, Message y)
             {
-                return x.Created == y.Created && y.Content == x.Content;
+                return x.Timestamp == y.Timestamp && y.Content == x.Content;
             }
 
             public int GetHashCode(Message obj)
             {
-                return obj.GetHashCode();
+                return 1;
             }
         }
     }

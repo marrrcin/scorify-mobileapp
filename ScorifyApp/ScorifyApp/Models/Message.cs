@@ -15,5 +15,14 @@ namespace ScorifyApp.Models
         public string AttachmentUrl { set; get; }
 
         public DateTime Created { set; get; }
+
+        public long Timestamp { set; get; }
+
+        public string Id { set; get; }
+    }
+
+    public class MessageCollection
+    {
+        public IEnumerable<Message> Messages { set; get; }
     }
 }

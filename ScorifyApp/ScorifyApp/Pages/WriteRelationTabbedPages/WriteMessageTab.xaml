@@ -6,8 +6,10 @@
     <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
       <Label Text="Write relation" FontSize="Large" HorizontalOptions="Start"></Label>
     </StackLayout>
-    <Entry Placeholder="write your message" x:Name="MessageTextBox" Text="{Binding Content}"></Entry>
-    <Button Text="Send" BackgroundColor="#5BAC23" TextColor="White" x:Name="SendButton" Clicked="SendButton_OnClicked"></Button>
-    <ActivityIndicator HorizontalOptions="Center" x:Name="SendingIndicator" IsVisible="False"></ActivityIndicator>
+    <StackLayout Orientation="Vertical" Padding="5,15,5,0">
+      <Entry Placeholder="write your message" x:Name="MessageTextBox" Text="{Binding Content}"></Entry>
+      <Button Text="Send" BackgroundColor="#5BAC23" TextColor="White" x:Name="SendButton" Clicked="SendButton_OnClicked"></Button>
+      <ActivityIndicator HorizontalOptions="Center" x:Name="SendingIndicator" IsVisible="False"></ActivityIndicator>
     </StackLayout>
+  </StackLayout>
 </ContentPage>

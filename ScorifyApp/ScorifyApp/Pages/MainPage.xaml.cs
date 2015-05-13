@@ -26,6 +26,7 @@ namespace ScorifyApp.Pages
         private async void DisciplinesList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var selected = e.SelectedItem as Discipline;
+            DisciplinesList.SelectedItem = null;
             if (selected != null)
             {
                 await Navigation.PushModalAsync(new DisciplinePage(selected), true);

@@ -38,15 +38,15 @@ namespace ScorifyApp.Models
 
     public class EventsMeta
     {
-        public Pagination Pagination { set; get; }
+        public Pagination? Pagination { set; get; }
     }
 
     public struct Pagination
     {
-        public int per_page;
+        public int? per_page;
 
-        public int total_pages;
+        public int? total_pages;
 
-        public int total_objects;
+        public int? total_objects;
     }
 }

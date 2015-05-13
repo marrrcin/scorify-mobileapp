@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -17,9 +18,9 @@ namespace ScorifyApp.Core.Data
     {
         public static string ApiUrl = @"http://boiling-citadel-6747.herokuapp.com/api/";
 
-        protected static Flurl.Url GetFlurlClientForRequest(string apiRequest)
+        protected static FlurlClient GetFlurlClientForRequest(string apiRequest)
         {
-            var client =  new Flurl.Url(ApiUrl + apiRequest);
+            var client = new Flurl.Url(ApiUrl + apiRequest).WithHeader("Accept", @"application/vnd.scorify.v1");
             return client;
         }
 
@@ -32,19 +33,17 @@ namespace ScorifyApp.Core.Data
 
         public async static Task<IEnumerable<Event>> GetEventsAsync(string discipline)
         {
-            //var request = GetFlurlClientForRequest("disciplines/" + discipline + "/events");
-            await Task.Delay(1);
-            var rand = new Random();
-            var events = Enumerable.Range(0, 15).Select(i => new Event
+            try
             {
-                Title = "Event #" + (i + 1),
-                User = new User { Name = "User" + (i % 4)},
-                StartDate = DateTime.Now.AddHours(rand.Next(1,7666)),
-                Finished = rand.Next() % 2 == 0,
-                Venue = "Venue " + rand.Next()
-            });
-
-            return events.ToArray();
+                var request = GetFlurlClientForRequest("disciplines/" + discipline + "/events");
+                var response = await request.GetJsonAsync<EventsCollection>();
+                return response.Events;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return new Event[0];
+            }
         }
 
         public static async Task<bool> CreateEventAsync(Event newEvent)
@@ -65,15 +64,13 @@ namespace ScorifyApp.Core.Data
                 var requestJson = JsonConvert.SerializeObject(requestData);
                 var request = GetFlurlClientForRequest(@"disciplines/" + newEvent.Discipline.Id + @"/events");
                 var response = await request
-                    .WithHeader("Accept", @"application/vnd.scorify.v1")
                     .PostJsonAsync(requestData);
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
                     return false;
                 }
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<String,object>>>(responseContent);
+                var responseData = await GetResponseData(response);
                 newEvent.Id = responseData["event"]["id"] as string;
             }
             catch (Exception ex)
@@ -85,28 +82,52 @@ namespace ScorifyApp.Core.Data
             return true;
         }
 
-        public static async Task<bool> PostEventMessageAsync(Event evnt)
+        private static async Task<Dictionary<string, Dictionary<string, object>>> GetResponseData(HttpResponseMessage response)
         {
-            await Task.Delay(1);
-            return true;
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, object>>>(responseContent);
+            return responseData;
         }
-        public static async Task<IEnumerable<Message>> GetEventMessages(Event evnt,DateTime? afterDate = null)
+
+        public static async Task<bool> PostEventMessageAsync(Message msg)
         {
-            await Task.Delay(1);
-            var rand = new Random();
-            var texts = new string[]
+            try
             {
-                "Vivamus molestie mauris ut mauris aliquam, id ullamcorper lorem finibus.",
-                "Donec vitae faucibus nibh.",
-                "Cras vitae leo turpis.",
-                "Morbi pretium lectus vel lobortis finibus."
-            };
-            var messages = Enumerable.Range(1, 1).Select(i => new Message
+                var requestData = new {message = new{content = msg.Content}};
+                var request = GetFlurlClientForRequest(@"disciplines/" + msg.Event.Discipline.Id + @"/events/" + msg.Event.Id + @"/messages");
+                var response = await request
+                    .PostJsonAsync(requestData);
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    return false;
+                }
+                var responseData = await GetResponseData(response);
+                msg.Id = responseData["message"]["id"] as string;
+                msg.Timestamp = Convert.ToInt64(responseData["message"]["timestamp"]);
+                return true;
+            }
+            catch (Exception ex)
             {
-                Created = DateTime.Now,
-                Content = texts[rand.Next()%texts.Length]
-            });
-            return messages.ToArray();
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        public static async Task<IEnumerable<Message>> GetEventMessages(Event evnt,long? afterTimestamp = null)
+        {
+            try
+            {
+                var request = GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + @"/events/" + evnt.Id + @"/messages");
+                var response = await request.Url
+                    .SetQueryParam("after",afterTimestamp ?? 0)
+                    .WithHeader("Accept", @"application/vnd.scorify.v1")
+                    .GetJsonAsync<MessageCollection>();
+                return response.Messages;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return new Message[0];
+            }
         }
     }
 

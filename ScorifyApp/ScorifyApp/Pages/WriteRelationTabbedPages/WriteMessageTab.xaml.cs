@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScorifyApp.Core.Data;
 using ScorifyApp.Models;
 using ScorifyApp.ViewModels;
 using Xamarin.Forms;
@@ -46,7 +47,15 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
                     Created = DateTime.Now,
                     Event = ViewModel.Event
                 };
-
+                var response = await ApiClient.PostEventMessageAsync(msg);
+                if (response)
+                {
+                    ViewModel.Content = string.Empty;
+                }
+                else
+                {
+                    await DisplayAlert("Could not post message", "Check your internet connection and try again later...", "Cancel");
+                }
             }
             UpdateActivity(false);
         }

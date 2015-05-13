@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,21 +32,38 @@ namespace ScorifyApp.Pages
         private async void EventsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var selected = e.SelectedItem as Event;
+            EventsList.SelectedItem = null;
             if (selected != null)
             {
+                selected.Discipline = ViewModel.Discipline;
                 await Navigation.PushModalAsync(new EventPage(selected));
             }
         }
 
         private async void SearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            var current = e.NewTextValue;
+            await Task.Delay(300);
+            if (current != SearchBox.Text) //do not search while user is typing
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(e.NewTextValue))
             {
                 if (e.NewTextValue != e.OldTextValue)
                 {
                     IEnumerable<Event> filtered = null;
-                    await Task.Factory.StartNew(() => filtered = FilterEvents(e.NewTextValue,ViewModel.Events.ToArray()));
-                    ViewModel.Filtered = filtered;
+                    try
+                    {
+                        await Task.Factory.StartNew(() => filtered = FilterEvents(e.NewTextValue, ViewModel.Events.ToArray()));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                    
+                    ViewModel.Filtered = filtered ?? new Event[0];
                 }
             }
             else
@@ -60,13 +78,14 @@ namespace ScorifyApp.Pages
             if (!string.IsNullOrEmpty(search))
             {
                 search = search.ToLower();
-                return (from ev in toFilter
-                                      where ev.Title.Contains(search)
-                                            || ev.Description.ToLower().Contains(search)
-                                            || ev.Venue.ToLower().Contains(search)
-                                            || ev.User.Name.ToLower().Contains(search)
-                                            || ev.StartDate.ToString().Contains(search)
-                                      select ev).ToArray();
+                var filtered = from ev in toFilter
+                    where ev.Title.ToLower().Contains(search)
+                          || ev.Description.ToLower().Contains(search)
+                          || ev.Venue.ToLower().Contains(search)
+                          //|| ev.User.Name.ToLower().Contains(search) TODO PUT USERNAME HERE
+                          || ev.StartDate.ToString().Contains(search)
+                    select ev;
+                return filtered.ToArray();
             }
             else
             {
