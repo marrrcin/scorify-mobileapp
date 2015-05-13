@@ -46,7 +46,8 @@ namespace ScorifyApp.Pages
         private async void WebView_OnNavigated(object sender, WebNavigatedEventArgs e)
         {
             var url = new Flurl.Url(e.Url.Replace(@"#","/?"));
-            if (e.Url.Contains("facebook") && e.Url.Contains("access_token"))
+            var webUrl = e.Url;
+            if (webUrl.Contains("facebook") && webUrl.Contains("access_token"))
             {
                 await ViewModel.FacebookLogin.ExtractCredentials(url);
                 ViewModel.IsLoggedIn = ViewModel.FacebookLogin.LoggedIn;

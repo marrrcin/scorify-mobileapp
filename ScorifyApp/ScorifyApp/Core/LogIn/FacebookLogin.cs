@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
+using System;
 
 namespace ScorifyApp.Core.LogIn
 {

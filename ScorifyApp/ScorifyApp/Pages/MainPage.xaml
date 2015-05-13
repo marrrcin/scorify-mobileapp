@@ -30,7 +30,7 @@
     
     <Button Text="Logout" BackgroundColor="Red"  VerticalOptions="End" TextColor="White" x:Name="LogoutButton" IsVisible="{Binding IsLoggedIn}" Clicked="LogoutButton_OnClicked"></Button>
     
-    <Label x:Name="TempLabel"/>
+    <Label x:Name="TempLabel" Text="masakra"/>
   </StackLayout>
 
 </ContentPage>

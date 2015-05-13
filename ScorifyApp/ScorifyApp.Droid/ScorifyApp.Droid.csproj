@@ -30,11 +30,21 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidLinkSkip />
+    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <BundleAssemblies>False</BundleAssemblies>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+    <Debugger>Xamarin</Debugger>
+    <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
+    <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -96,7 +106,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\AndroidManifest.xml" />
+    <Content Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScorifyApp\ScorifyApp.csproj">
