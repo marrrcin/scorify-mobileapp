@@ -46,6 +46,7 @@
     <Compile Include="Core\LogIn\ITwitterApi.cs" />
     <Compile Include="Core\LogIn\TwitterApiData.cs" />
     <Compile Include="Core\LogIn\TwitterLogin.cs" />
+    <Compile Include="Core\LogIn\UserContext.cs" />
     <Compile Include="Models\Discipline.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Message.cs" />
@@ -68,8 +69,20 @@
     <Compile Include="Pages\NewRelationPage.xaml.cs">
       <DependentUpon>NewRelationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserDetailsPage.xaml.cs">
+      <DependentUpon>UserDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserDetailsTabbedPages\UserEventsTab.xaml.cs">
+      <DependentUpon>UserEventsTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserDetailsTabbedPages\UserProfileTab.xaml.cs">
+      <DependentUpon>UserProfileTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\WriteRelationPage.xaml.cs">
       <DependentUpon>WriteRelationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WriteRelationTabbedPages\EditEventTab.xaml.cs">
+      <DependentUpon>EditEventTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\WriteRelationTabbedPages\WriteMessageTab.xaml.cs">
       <DependentUpon>WriteMessageTab.xaml</DependentUpon>
@@ -80,6 +93,7 @@
     <Compile Include="ViewModels\EventPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\NewEventPageViewModel.cs" />
+    <Compile Include="ViewModels\UserDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\WriteRelationPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,9 +215,55 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\UserDetailsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\WriteRelationTabbedPages\WriteMessageTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\UserDetailsTabbedPages\UserEventsTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\UserDetailsTabbedPages\UserProfileTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\calendar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\description.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\message.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\newrelation.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\profile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\scorify.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons\stream.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\WriteRelationTabbedPages\EditEventTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

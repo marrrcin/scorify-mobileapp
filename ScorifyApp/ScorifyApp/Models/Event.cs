@@ -28,6 +28,8 @@ namespace ScorifyApp.Models
 
         public IEnumerable<Dictionary<string,object>> Contenders { set; get; }
         public string Id { get; set; }
+
+        public string Discipline_Id { set; get; }
     }
 
     public class EventsCollection

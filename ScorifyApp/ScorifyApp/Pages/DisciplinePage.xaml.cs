@@ -15,28 +15,62 @@ namespace ScorifyApp.Pages
     {
         private DisciplinePageViewModel ViewModel;
 
-        public DisciplinePage(Discipline discipline)
+        private User User = null;
+
+        private bool ShowFinished = false;
+
+        public DisciplinePage(string pageTitle, User user) : this(null,pageTitle)
+        {
+            User = user;
+
+            //windows phone nested layout padding fix
+            var oldPadding = WrapperStackLayout.Padding;
+            var newPadding = new Thickness(oldPadding.Left, oldPadding.Top, oldPadding.Right + 5, oldPadding.Bottom + 10);
+            WrapperStackLayout.Padding = newPadding;
+        }
+
+        public DisciplinePage(Discipline discipline,string pageTitle)
         {
             InitializeComponent();
             ViewModel = new DisciplinePageViewModel {Discipline = discipline};
             BindingContext = ViewModel;
+            PageTitleLabel.Text = pageTitle;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            ViewModel.Events = await ApiClient.GetEventsAsync(ViewModel.Discipline.Title);
-            ViewModel.Filtered = ViewModel.Events;
+            if (User == null)
+            {
+                ViewModel.Events = await ApiClient.GetEventsAsync(ViewModel.Discipline);
+            }
+            else
+            {
+                ViewModel.Events = User.Events;
+            }
+            ViewModel.Filtered = ViewModel.Events.Where(ev => ev.Finished == ShowFinished);
         }
 
         private async void EventsList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var selected = e.SelectedItem as Event;
             EventsList.SelectedItem = null;
-            if (selected != null)
+            if (selected != null)// null;//finished here - i wanted to use discipline page both as discipline page and user events page
             {
-                selected.Discipline = ViewModel.Discipline;
-                await Navigation.PushModalAsync(new EventPage(selected));
+                if (selected.Discipline == null)
+                {
+                    selected.Discipline = ViewModel.Discipline;
+                }
+
+                if (User != null)
+                {
+                    await Navigation.PushModalAsync(new WriteRelationPage(selected));
+                }
+                else
+                {
+                    await Navigation.PushModalAsync(new EventPage(selected));    
+                }
+                
             }
         }
 
@@ -79,17 +113,18 @@ namespace ScorifyApp.Pages
             {
                 search = search.ToLower();
                 var filtered = from ev in toFilter
-                    where ev.Title.ToLower().Contains(search)
-                          || ev.Description.ToLower().Contains(search)
-                          || ev.Venue.ToLower().Contains(search)
-                          //|| ev.User.Name.ToLower().Contains(search) TODO PUT USERNAME HERE
-                          || ev.StartDateTime.ToString().Contains(search)
-                    select ev;
+                               where ev.Finished == ShowFinished
+                                       && (ev.Title.ToLower().Contains(search)
+                                          || ev.Description.ToLower().Contains(search)
+                                          || ev.Venue.ToLower().Contains(search)
+                                   //|| ev.User.Name.ToLower().Contains(search) TODO PUT USERNAME HERE
+                                          || ev.StartDateTime.ToString().Contains(search))
+                               select ev;
                 return filtered.ToArray();
             }
             else
             {
-                return toFilter;
+                return toFilter.Where(ev => ev.Finished == ShowFinished).ToArray();
             }
         }
 
@@ -97,6 +132,33 @@ namespace ScorifyApp.Pages
         {
             var discipline = ViewModel.Discipline;
             await Navigation.PushModalAsync(new NewRelationPage(discipline));
+        }
+
+
+        private Color OldColor;
+        private async void Button_OnClicked(object sender, EventArgs e)
+        {
+            ShowFinished = !ShowFinished;
+            var btn = sender as Button;
+            if (ShowFinished)
+            {
+                OldColor = btn.BackgroundColor;
+                btn.BackgroundColor = new Color(254/255.0,95/255.0,85/255.0);
+            }
+            else
+            {
+                btn.BackgroundColor = OldColor;
+            }
+
+            IEnumerable<Event> filtered = null;
+            try
+            {
+                await Task.Factory.StartNew(() => filtered = FilterEvents(SearchBox.Text, ViewModel.Events.ToArray()));
+            }
+            catch (Exception)
+            {
+            }
+            ViewModel.Filtered = filtered ?? new Event[0];
         }
     }
 }

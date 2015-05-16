@@ -24,6 +24,8 @@ namespace ScorifyApp.Pages
             InitializeComponent();
             Children.Add(new WriteMessageTab(ViewModel));
             Children.Add(new StreamTab(StreamViewModel));
+            Children.Add(new DescriptionTab(StreamViewModel));
+            Children.Add(new NewRelationPage(evnt.Discipline,evnt));
             
 
             BindingContext = ViewModel;

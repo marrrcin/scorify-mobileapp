@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
              x:Class="ScorifyApp.Pages.EventTabbedPages.StreamTab"
-             Title="Stream">
+             Title="Stream" BackgroundColor="#050517">
   <StackLayout>
-    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
-      <Label Text="Stream" FontSize="Large" HorizontalOptions="Start"></Label>
-      <ActivityIndicator HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="stream.png" HorizontalOptions="Start"></Image>
+      <Label Text="Stream" FontSize="Large" HorizontalOptions="Start" VerticalOptions="Center"></Label>
+      <ActivityIndicator VerticalOptions="Center" HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
     </StackLayout>
     <StackLayout Orientation="Vertical" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" Padding="0,0,0,15">
         <ListView ItemsSource="{Binding Messages}" x:Name="MessageList"  IsVisible="True" HasUnevenRows="True">
@@ -16,7 +17,7 @@
             <ViewCell>
               <ViewCell.View>
                 <StackLayout Orientation="Vertical" Padding="5,0,0,0">
-                  <Label Text="{Binding Content}" Font="Medium" XAlign="Start" TextColor="Green"></Label>
+                  <Label Text="{Binding Content}" Font="Medium" XAlign="Start" TextColor="#6369D1"></Label>
                   <StackLayout Orientation="Horizontal">
                     <Label Text="{Binding Created,StringFormat='on {0}'}"></Label>
                   </StackLayout>

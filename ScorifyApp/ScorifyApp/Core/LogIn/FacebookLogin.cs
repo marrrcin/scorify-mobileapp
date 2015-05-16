@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
+using ScorifyApp.Core.Data;
+using ScorifyApp.Models;
 
 namespace ScorifyApp.Core.LogIn
 {
@@ -39,12 +41,14 @@ namespace ScorifyApp.Core.LogIn
             if (!string.IsNullOrEmpty(fromFile))
             {
                 var facebookLogin = JsonConvert.DeserializeObject<FacebookLogin>(fromFile);
-                if (!string.IsNullOrEmpty(facebookLogin.Token))
+                if (facebookLogin.User != null && !string.IsNullOrEmpty(facebookLogin.User.Auth_Token))
                 {
                     Token = facebookLogin.Token;
                     Code = facebookLogin.Code;
                     UserId = facebookLogin.UserId;
                     UserEmail = facebookLogin.UserEmail;
+                    User = facebookLogin.User;
+                    UserContext.Initialize(User);
                     LoggedIn = true;
                 }
             }
@@ -74,7 +78,13 @@ namespace ScorifyApp.Core.LogIn
             var userInfo = await GetUserInfoAsync();
             UserEmail = userInfo.Email;
             UserId = userInfo.Id;
-
+            User = await ApiClient.LogInUser("facebook", Token);
+            if (string.IsNullOrEmpty(User.Auth_Token))
+            {
+                LoggedIn = false;
+                return;
+            }
+            
             var toSave = JsonConvert.SerializeObject(this);
             if (!await FileStorage.SaveToFile(FileName, toSave))
             {
@@ -89,6 +99,8 @@ namespace ScorifyApp.Core.LogIn
                 LoggedIn = true;
             }
         }
+
+        public User User { set; get; }
 
         protected struct UserInfo
         {

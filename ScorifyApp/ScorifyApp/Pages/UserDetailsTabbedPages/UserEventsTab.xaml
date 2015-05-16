@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScorifyApp.Pages.UserDetailsTabbedPages.UserEventsTab">
-  <StackLayout>
-    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+             x:Class="ScorifyApp.Pages.UserDetailsTabbedPages.UserEventsTab" BackgroundColor="#050517">
+  <StackLayout Padding="0,0,0,25">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
       <Label Text="Your relations" FontSize="Large" HorizontalOptions="Start"></Label>
     </StackLayout>
-    <ListView ItemsSource="{Binding User.Events}" x:Name="UserEventsList" HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="">
+    <ListView ItemsSource="{Binding User.Events}" x:Name="UserEventsList"  HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="UserEventsList_OnItemSelected">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
@@ -25,5 +25,4 @@
       </ListView.ItemTemplate>
     </ListView>
   </StackLayout>
-
 </ContentPage>

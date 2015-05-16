@@ -11,6 +11,8 @@ namespace ScorifyApp.Models
         public string Email { set; get; }
         public string Id { get; set; }
 
+        public string Auth_Token { set; get; }
+
         public IEnumerable<Event> Events { set; get; }
     }
 }

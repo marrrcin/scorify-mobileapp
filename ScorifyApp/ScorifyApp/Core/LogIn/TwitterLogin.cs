@@ -4,6 +4,7 @@ using Flurl;
 using Newtonsoft.Json;
 using Tweetinvi;
 using Tweetinvi.Core.Interfaces.Credentials;
+using User = ScorifyApp.Models.User;
 
 namespace ScorifyApp.Core.LogIn
 {
@@ -41,6 +42,8 @@ namespace ScorifyApp.Core.LogIn
         public string TokenSecret { set; get; }
 
         public string UserId { set; get; }
+
+        public string UserEmail { set; get; }
 
         public string CallbackUrl = @"http://188.226.142.132/scorifymobileapp-callback";
 
@@ -85,7 +88,9 @@ namespace ScorifyApp.Core.LogIn
                 TwitterCredentials.SetCredentials(credentials);
                 Token = credentials.AccessToken;
                 TokenSecret = credentials.AccessTokenSecret;
-                UserId = (await UserAsync.GetLoggedUser()).IdStr;
+                var user = await UserAsync.GetLoggedUser();
+                UserId = user.IdStr;
+                UserEmail = user.ScreenName;
 
                 var toSave = JsonConvert.SerializeObject(this);
                 if (!await FileStorage.SaveToFile(FileName, toSave))
@@ -104,6 +109,8 @@ namespace ScorifyApp.Core.LogIn
                 
             }
         }
+
+        public User User { set; get; }
 
         public async Task Logout()
         {

@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScorifyApp.Pages.NewRelationPage">
+             x:Class="ScorifyApp.Pages.NewRelationPage" BackgroundColor="#050517">
   <StackLayout Orientation="Vertical">
-    <Label Text="Create new relation:" FontSize="Medium"></Label>
+    <StackLayout BackgroundColor="#6369D1" HorizontalOptions="Fill" Orientation="Horizontal" Padding="5,5,5,5">
+      <Image Source="newrelation.png" HorizontalOptions="Start"></Image><Label Text="Create new relation" FontSize="Large" VerticalOptions="Center"></Label>
+      </StackLayout>
     <StackLayout Orientation="Vertical" Padding="15,15,15,15">
       <Label Text="Title"></Label>
       <Entry x:Name="TitleTextBox" Text="{Binding Title}"></Entry>
@@ -19,7 +21,7 @@
       <TimePicker x:Name="EndTimePicker" IsVisible="True" Time="{Binding EndTime}"></TimePicker>
       <Label Text="Contenders (comma separated)"></Label>
       <Entry x:Name="ContendersTextBox" Text="{Binding Contenders}"></Entry>
-      <Button Text="Create" x:Name="CreateButton" BackgroundColor="#5BAC23" TextColor="White" Clicked="CreateButton_OnClicked"></Button>
+      <Button Text="Create" x:Name="CreateButton" BackgroundColor="#0DAB76" TextColor="White" Clicked="CreateButton_OnClicked"></Button>
     </StackLayout>
   </StackLayout>
 </ContentPage>

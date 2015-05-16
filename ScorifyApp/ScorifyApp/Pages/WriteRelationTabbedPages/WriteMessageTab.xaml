@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScorifyApp.Pages.WriteRelationTabbedPages.WriteMessageTab">
+             x:Class="ScorifyApp.Pages.WriteRelationTabbedPages.WriteMessageTab" BackgroundColor="#050517">
   <StackLayout>
-    <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
-      <Label Text="Write relation" FontSize="Large" HorizontalOptions="Start"></Label>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="newrelation.png" HorizontalOptions="Start"></Image><Label VerticalOptions="Center" Text="Write relation" FontSize="Large" HorizontalOptions="StartAndExpand"></Label>
     </StackLayout>
     <StackLayout Orientation="Vertical" Padding="5,15,5,0">
       <Entry Placeholder="write your message" x:Name="MessageTextBox" Text="{Binding Content}"></Entry>
-      <Button Text="Send" BackgroundColor="#5BAC23" TextColor="White" x:Name="SendButton" Clicked="SendButton_OnClicked"></Button>
+      <Button Text="Send" BackgroundColor="#0DAB76" TextColor="White" x:Name="SendButton" Clicked="SendButton_OnClicked"></Button>
       <ActivityIndicator HorizontalOptions="Center" x:Name="SendingIndicator" IsVisible="False"></ActivityIndicator>
     </StackLayout>
   </StackLayout>

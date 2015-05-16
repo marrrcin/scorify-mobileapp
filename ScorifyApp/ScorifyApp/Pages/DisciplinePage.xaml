@@ -2,11 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:scorifyApp="clr-namespace:ScorifyApp;assembly=ScorifyApp"
-             x:Class="ScorifyApp.Pages.DisciplinePage">
-  <StackLayout Orientation="Vertical" Padding="0,0,0,25">
-    <Label Text="Available relations:" FontSize="Medium"></Label>
+             x:Class="ScorifyApp.Pages.DisciplinePage"
+             BackgroundColor="#050517">
+  <StackLayout Orientation="Vertical" Padding="0,0,0,25" x:Name="WrapperStackLayout">
+    <StackLayout BackgroundColor="#6369D1" HorizontalOptions="Fill" Orientation="Horizontal" Padding="5,5,5,5">
+      <Image Source="calendar.png" HorizontalOptions="Start"></Image><Label Text="Available relations" FontSize="Large" x:Name="PageTitleLabel" VerticalOptions="Center"></Label>
+      </StackLayout>
     <StackLayout Orientation="Horizontal">
       <Entry Placeholder="search" x:Name="SearchBox" HorizontalOptions="FillAndExpand" TextChanged="SearchBox_OnTextChanged"></Entry>
+      <StackLayout Orientation="Vertical" HorizontalOptions="End">
+        <Button BackgroundColor="#6369D1" Text="finished" Clicked="Button_OnClicked"></Button>
+      </StackLayout>  
+    
     </StackLayout>
     <ListView ItemsSource="{Binding Filtered}" x:Name="EventsList" HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="EventsList_OnItemSelected">
       <ListView.ItemTemplate>
@@ -14,19 +21,24 @@
           <ViewCell>
             <ViewCell.View>
               <StackLayout Spacing="10" Orientation="Vertical" VerticalOptions="StartAndExpand" Padding="5,5,5,5">
-                <Label Text="{Binding Title}" FontSize="Medium" XAlign="Start" TextColor="Yellow"></Label>
                 <StackLayout Orientation="Horizontal">
-                  <Label Text="{Binding User.Name,StringFormat='by {0}'}"></Label>
-                  <Label Text="{Binding StartDateTime,StringFormat='Start @ {0}'}"></Label>
-                  <Label Text="{Binding Finished,StringFormat='Finished? {0}'}"></Label>
+                  <Image Source="calendarSmall.png" HorizontalOptions="Start"></Image>
+                  <Label Text="{Binding Title,StringFormat='  {0}'}"  VerticalOptions="CenterAndExpand" FontSize="Medium" XAlign="Start" YAlign="Center" TextColor="#6369D1"></Label>
                 </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="{Binding User.Email,StringFormat='by {0}'}"></Label>
+                  <Label Text="{Binding Discipline.Title,StringFormat='in {0}'}"></Label>  
+                </StackLayout>
+                <Label Text="{Binding Finished,StringFormat='Finished? {0}'}"></Label>
+                <Label Text="{Binding StartDateTime,StringFormat='Start @ {0}'}"></Label>
+                
               </StackLayout>
             </ViewCell.View>
           </ViewCell>
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-    <Button x:Name="NewRelationButton" HorizontalOptions="FillAndExpand" Text="Create new relation" BackgroundColor="#5BAC23" TextColor="White" Clicked="NewRelationButton_OnClicked" VerticalOptions="End"></Button>
+    <Button x:Name="NewRelationButton" HorizontalOptions="FillAndExpand" Text="Create new relation" BackgroundColor="#0DAB76" TextColor="White" Clicked="NewRelationButton_OnClicked" VerticalOptions="Start"></Button>
   </StackLayout>
   
 

@@ -9,19 +9,53 @@ using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ScorifyApp.Core.LogIn;
 using ScorifyApp.Models;
+using Tweetinvi.Core.Helpers;
 using Tweetinvi.Core.Interfaces;
 
 namespace ScorifyApp.Core.Data
 {
     public class ApiClient
     {
-        public static string ApiUrl = @"http://boiling-citadel-6747.herokuapp.com/api/";
+        public static string ApiUrl = @"http://46.101.38.197:3000/api/";
 
         protected static FlurlClient GetFlurlClientForRequest(string apiRequest)
         {
             var client = new Flurl.Url(ApiUrl + apiRequest).WithHeader("Accept", @"application/vnd.scorify.v1");
             return client;
+        }
+
+        public static async Task<User> LogInUser(string provider, string token)
+        {
+            try
+            {
+                var request = GetFlurlClientForRequest("sessions");
+                var requestData = new
+                {
+                    session = new
+                    {
+                        provider = provider,
+                        provider_token = token
+                    }
+                };
+
+                var response = await request.PostJsonAsync(requestData);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return null;
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var user = JsonConvert.DeserializeObject<UserWrapper>(responseContent);
+                return user.User;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return null;
         }
 
         public async static Task<IEnumerable<Discipline>> GetDisciplinesAsync()
@@ -31,15 +65,16 @@ namespace ScorifyApp.Core.Data
             return result.Disciplines;
         }
 
-        public async static Task<IEnumerable<Event>> GetEventsAsync(string discipline)
+        public async static Task<IEnumerable<Event>> GetEventsAsync(Discipline discipline)
         {
             try
             {
-                var request = GetFlurlClientForRequest("disciplines/" + discipline + "/events");
+                var request = GetFlurlClientForRequest("disciplines/" + discipline.Id + "/events");
                 var response = await request.GetJsonAsync<EventsCollection>();
                 foreach (var evnt in response.Events)
                 {
                     ParseDates(evnt);
+                    evnt.Discipline = discipline;
                 }
                 return response.Events;
             }
@@ -59,7 +94,7 @@ namespace ScorifyApp.Core.Data
             }
         }
 
-        public static async Task<bool> CreateEventAsync(Event newEvent)
+        public static async Task<bool> CreateEventAsync(Event newEvent,bool asEdit = false)
         {
             try
             {
@@ -76,9 +111,23 @@ namespace ScorifyApp.Core.Data
                 var requestData = new {@event = eventData, user_id = newEvent.User.Id};
                 var requestJson = JsonConvert.SerializeObject(requestData);
                 var request = GetFlurlClientForRequest(@"disciplines/" + newEvent.Discipline.Id + @"/events");
-                var response = await request
-                    .PostJsonAsync(requestData);
-                if (response.StatusCode != HttpStatusCode.Created)
+
+                HttpResponseMessage response;
+                if (asEdit)
+                {
+                    response = await request
+                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
+                        .PatchJsonAsync(requestData);
+                }
+                else
+                {
+                    response = await request
+                       .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
+                       .PostJsonAsync(requestData);
+                }
+
+               
+                if (response.StatusCode != HttpStatusCode.Created || response.StatusCode != HttpStatusCode.OK)
                 {
                     return false;
                 }
@@ -109,6 +158,7 @@ namespace ScorifyApp.Core.Data
                 var requestData = new {message = new{content = msg.Content}};
                 var request = GetFlurlClientForRequest(@"disciplines/" + msg.Event.Discipline.Id + @"/events/" + msg.Event.Id + @"/messages");
                 var response = await request
+                    .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
                     .PostJsonAsync(requestData);
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -154,20 +204,43 @@ namespace ScorifyApp.Core.Data
                 var request = GetFlurlClientForRequest(@"users/" + userId);
                 var response = await request
                     .WithHeader("Accept", @"application/vnd.scorify.v1")
-                    .GetJsonAsync<User>();
+                    .GetJsonAsync<UserWrapper>();
 
-                foreach (var evnt in response.Events)
+                var user = response.User;
+
+                if (user.Events.Any())
                 {
-                    ParseDates(evnt);
-                    evnt.User = response;
+                    var disciplinesMapping = (await ApiClient.GetDisciplinesAsync()).ToDictionary(kvp=>kvp.Id,kvp=>kvp.Title);
+                    foreach (var evnt in user.Events)
+                    {
+                        ParseDates(evnt);
+                        evnt.User = user;
+                        evnt.Discipline = new Discipline
+                        {
+                            Id = evnt.Discipline_Id,
+                            Title = disciplinesMapping[evnt.Discipline_Id]
+                        };
+                    }
                 }
-                return response;
+
+                
+                return user;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 return null;
             }
+        }
+
+        private class UserWrapper
+        {
+            public User User { set; get; }
+        }
+
+        public static async Task<bool> EditEventAsync(Event evnt)
+        {
+            return await CreateEventAsync(evnt, true);
         }
     }
 
