@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,55 +15,31 @@ namespace ScorifyApp.Pages
     public partial class NewRelationPage : ContentPage
     {
         private NewEventPageViewModel ViewModel;
-
-        private Event Event;
-
-        public NewRelationPage(Discipline discipline,Event evnt = null)
+        public NewRelationPage(Discipline discipline)
         {
             InitializeComponent();
             ViewModel = new NewEventPageViewModel {Discipline = discipline};
             BindingContext = ViewModel;
-            Event = evnt;
-            if (evnt != null)
-            {
-                CreateButton.Text = "Edit";
-            }
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             var now = DateTime.Now;
+            StartTimePicker.Time = new TimeSpan(now.Hour,now.Minute,seconds:now.Second);
+            EndTimePicker.Time = new TimeSpan(now.Hour, now.Minute + 1, seconds: now.Second);
+            StartDatePicker.Date = now;
+            EndDatePicker.Date = now;
+            ViewModel.StartDate = now;
+            ViewModel.EndDate = now;
+
             //TODO delete this before release:
-            if (Event == null)
-            {
-                StartTimePicker.Time = new TimeSpan(now.Hour, now.Minute, seconds: now.Second);
-                EndTimePicker.Time = new TimeSpan(now.Hour, now.Minute + 1, seconds: now.Second);
-                StartDatePicker.Date = now;
-                EndDatePicker.Date = now;
-                ViewModel.StartDate = now;
-                ViewModel.EndDate = now;
-                ViewModel.Title = "Lorem title dolor";
-                ViewModel.Description = "Ipsum dolor sit amet? Yolo swag";
-                ViewModel.Contenders = "Arsenal,Lech Poznan";
-                ViewModel.Venue = "PUT Gym";
-            }
-            else
-            {
-                StartTimePicker.Time = new TimeSpan(Event.StartDateTime.Hour, Event.StartDateTime.Minute, seconds: Event.StartDateTime.Second);
-                EndTimePicker.Time = new TimeSpan(Event.StartDateTime.Hour + 1, Event.StartDateTime.Minute, seconds: Event.StartDateTime.Second);
-                StartDatePicker.Date = Event.StartDateTime;
-                EndDatePicker.Date = Event.StartDateTime;
-                ViewModel.Description = Event.Description;
-                ViewModel.Title = Event.Title;
-                ViewModel.Venue = Event.Venue;
-                if (Event.Contenders == null)
-                {
-                    Event.Contenders = Enumerable.Empty<Dictionary<string, object>>();
-                }
-                ViewModel.Contenders = string.Join(",", Event.Contenders.Select(d=>d["title"] as string));
-            }
+            ViewModel.Title = "Lorem title dolor";
+            ViewModel.Description = "Ipsum dolor sit amet? Yolo swag";
+            ViewModel.Contenders = "Arsenal,Lech Poznan";
+            ViewModel.Venue = "PUT Gym";
             ViewModel.User = UserContext.Current.User;
+
         }
 
         private async void CreateButton_OnClicked(object sender, EventArgs e)
@@ -80,18 +55,11 @@ namespace ScorifyApp.Pages
             else
             {
                 var buttonText = CreateButton.Text;
+                CreateButton.Text = "Creating ...";
+
                 var evnt = PrepareEventToSend();
-                bool response;
-                if (Event == null)
-                {
-                    CreateButton.Text = "Creating ...";
-                    response = await ApiClient.CreateEventAsync(evnt);
-                }
-                else
-                {
-                    CreateButton.Text = "Editing ...";
-                    response = await ApiClient.EditEventAsync(evnt);
-                }
+                var response = await ApiClient.CreateEventAsync(evnt);
+
                 CreateButton.Text = buttonText;
                 
                 if (response)
@@ -144,7 +112,7 @@ namespace ScorifyApp.Pages
                 errors.AddLast("Description has incorrect length");
             }
 
-            if (string.IsNullOrEmpty(evnt.Venue) || evnt.Title.Length < 6 || evnt.Title.Length > 64)
+            if (string.IsNullOrEmpty(evnt.Venue) || evnt.Venue.Length < 6 || evnt.Venue.Length > 64)
             {
                 errors.AddLast("Venue has incorrect length");
             }

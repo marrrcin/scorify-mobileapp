@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScorifyApp.Pages.WriteRelationTabbedPages.EditEventTab"
+             BackgroundColor="#050517">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="newrelation.png" HorizontalOptions="Start"></Image>
+      <Label VerticalOptions="Center" Text="Edit details" FontSize="Large" HorizontalOptions="StartAndExpand"></Label>
+    </StackLayout>
+    <StackLayout Orientation="Vertical" Padding="5,15,5,0">
+      <Label Text="Title"></Label>
+      <Entry x:Name="TitleTextBox" Text="{Binding Title}"></Entry>
+      <Label Text="Desciption"></Label>
+      <Entry x:Name="DescriptionTextBox" Text="{Binding Description}"></Entry>
+      <Label Text="Venue"></Label>
+      <Entry x:Name="VenueTextBox" Text="{Binding Venue}"></Entry>
+      <Label Text="Is Finished"></Label>
+      <Switch x:Name="FinishedSwitch" IsToggled="{Binding Finished}"></Switch>
+      <Button Text="Edit" BackgroundColor="#0DAB76" TextColor="White" x:Name="EditButton" Clicked="EditButton_OnClicked"></Button>
+    </StackLayout>
+  </StackLayout>
+</ContentPage>

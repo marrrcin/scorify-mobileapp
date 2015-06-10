@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac.Core;
 using Flurl;
 using Newtonsoft.Json;
+using ScorifyApp.Core.Data;
 using Tweetinvi;
 using Tweetinvi.Core.Interfaces.Credentials;
 using User = ScorifyApp.Models.User;
@@ -91,7 +93,13 @@ namespace ScorifyApp.Core.LogIn
                 var user = await UserAsync.GetLoggedUser();
                 UserId = user.IdStr;
                 UserEmail = user.ScreenName;
-
+                User = await ApiClient.LogInUser("twitter", Token, TokenSecret);
+                if (User == null)
+                {
+                    LoggedIn = false;
+                    return;
+                }
+                UserContext.Initialize(User);
                 var toSave = JsonConvert.SerializeObject(this);
                 if (!await FileStorage.SaveToFile(FileName, toSave))
                 {

@@ -27,6 +27,11 @@ namespace ScorifyApp.Pages
             var oldPadding = WrapperStackLayout.Padding;
             var newPadding = new Thickness(oldPadding.Left, oldPadding.Top, oldPadding.Right + 5, oldPadding.Bottom + 10);
             WrapperStackLayout.Padding = newPadding;
+
+            if (ViewModel.Discipline == null)
+            {
+                NewRelationButton.IsVisible = false;
+            }
         }
 
         public DisciplinePage(Discipline discipline,string pageTitle)
@@ -117,7 +122,7 @@ namespace ScorifyApp.Pages
                                        && (ev.Title.ToLower().Contains(search)
                                           || ev.Description.ToLower().Contains(search)
                                           || ev.Venue.ToLower().Contains(search)
-                                   //|| ev.User.Name.ToLower().Contains(search) TODO PUT USERNAME HERE
+                                   || ev.User.Email.ToLower().Contains(search)
                                           || ev.StartDateTime.ToString().Contains(search))
                                select ev;
                 return filtered.ToArray();

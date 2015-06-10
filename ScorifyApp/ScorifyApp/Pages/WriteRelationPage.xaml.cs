@@ -19,16 +19,23 @@ namespace ScorifyApp.Pages
 
         public WriteRelationPage(Event evnt)
         {
+            InitializeComponent();
             StreamViewModel = new EventPageViewModel {Event = evnt};
             ViewModel=new WriteRelationPageViewModel {Event = evnt};
-            InitializeComponent();
             Children.Add(new WriteMessageTab(ViewModel));
             Children.Add(new StreamTab(StreamViewModel));
             Children.Add(new DescriptionTab(StreamViewModel));
-            Children.Add(new NewRelationPage(evnt.Discipline,evnt));
-            
-
+            Children.Add(new EditEventTab(evnt));
             BindingContext = ViewModel;
+            int i = 0;
+            Device.StartTimer(TimeSpan.FromMilliseconds(300), () =>
+            {
+                ForceLayout();
+                OnCurrentPageChanged();
+                ++i;
+                return i <= 3;
+            });
         }
+
     }
 }

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScorifyApp.Pages.UserDetailsTabbedPages.UserProfileTab" BackgroundColor="#050517">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="profile.png" HorizontalOptions="Start"></Image><Label VerticalOptions="Center" Text="Your profile" FontSize="Large" HorizontalOptions="Start"></Label>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal">
+      <Label FontSize="Medium" HorizontalOptions="Start" Text="Email:"></Label>
+      <Label FontSize="Medium" HorizontalOptions="End" Text="{Binding User.Email}"></Label>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal">
+      <Label FontSize="Medium" HorizontalOptions="Start" Text="Id:"></Label>
+      <Label FontSize="Medium" HorizontalOptions="End" Text="{Binding User.Id}"></Label>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal">
+      <Label FontSize="Medium" HorizontalOptions="Start" Text="Your relations:"></Label>
+      <Label FontSize="Medium" HorizontalOptions="End" Text="{Binding EventsCount}"></Label>
+    </StackLayout>
+    </StackLayout>
+</ContentPage>

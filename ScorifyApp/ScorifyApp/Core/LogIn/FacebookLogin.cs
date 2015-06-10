@@ -84,7 +84,7 @@ namespace ScorifyApp.Core.LogIn
                 LoggedIn = false;
                 return;
             }
-            
+            UserContext.Initialize(User);
             var toSave = JsonConvert.SerializeObject(this);
             if (!await FileStorage.SaveToFile(FileName, toSave))
             {

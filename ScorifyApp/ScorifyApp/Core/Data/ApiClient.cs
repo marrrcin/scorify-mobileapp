@@ -18,7 +18,7 @@ namespace ScorifyApp.Core.Data
 {
     public class ApiClient
     {
-        public static string ApiUrl = @"http://46.101.38.197:3000/api/";
+        public static string ApiUrl = @"http://46.101.33.201:4000/api/";
 
         protected static FlurlClient GetFlurlClientForRequest(string apiRequest)
         {
@@ -26,19 +26,36 @@ namespace ScorifyApp.Core.Data
             return client;
         }
 
-        public static async Task<User> LogInUser(string provider, string token)
+        public static async Task<User> LogInUser(string provider, string token, string secret = null)
         {
             try
             {
                 var request = GetFlurlClientForRequest("sessions");
-                var requestData = new
+                object requestData;
+                if (provider == "facebook")
                 {
-                    session = new
+                    requestData = new
                     {
-                        provider = provider,
-                        provider_token = token
-                    }
-                };
+                        session = new
+                        {
+                            provider = provider,
+                            provider_token = token
+                        }
+                    };
+                }
+                else
+                {
+                    requestData = new
+                    {
+                        session = new
+                        {
+                            provider = provider,
+                            provider_token = token,
+                            provider_secret = secret
+                        }
+                    };
+                }
+                
 
                 var response = await request.PostJsonAsync(requestData);
 
@@ -94,7 +111,7 @@ namespace ScorifyApp.Core.Data
             }
         }
 
-        public static async Task<bool> CreateEventAsync(Event newEvent,bool asEdit = false)
+        public static async Task<bool> CreateEventAsync(Event newEvent)
         {
             try
             {
@@ -107,27 +124,14 @@ namespace ScorifyApp.Core.Data
                     {"end_date" , newEvent.EndDateTime.ToApiDateTimeFormat()},
                     {"contenders" , newEvent.Contenders.ToArray()}
                 };
-
                 var requestData = new {@event = eventData, user_id = newEvent.User.Id};
-                var requestJson = JsonConvert.SerializeObject(requestData);
                 var request = GetFlurlClientForRequest(@"disciplines/" + newEvent.Discipline.Id + @"/events");
 
-                HttpResponseMessage response;
-                if (asEdit)
-                {
-                    response = await request
-                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
-                        .PatchJsonAsync(requestData);
-                }
-                else
-                {
-                    response = await request
+                var response = await request
                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
                        .PostJsonAsync(requestData);
-                }
-
                
-                if (response.StatusCode != HttpStatusCode.Created || response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.Created)
                 {
                     return false;
                 }
@@ -240,7 +244,34 @@ namespace ScorifyApp.Core.Data
 
         public static async Task<bool> EditEventAsync(Event evnt)
         {
-            return await CreateEventAsync(evnt, true);
+            try
+            {
+                var eventData = new Dictionary<string, object>
+                {
+                    {"title" , evnt.Title},
+                    {"description" , evnt.Description},
+                    {"venue" , evnt.Venue},
+                    {"finished",evnt.Finished}
+                };
+                var requestData = new { @event = eventData, user_id = evnt.User.Id };
+                var request = GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + @"/events/"+evnt.Id);
+
+                var response = await request
+                       .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
+                       .PatchJsonAsync(requestData);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+
+            return true;
         }
     }
 

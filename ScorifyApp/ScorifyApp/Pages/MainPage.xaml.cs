@@ -167,12 +167,21 @@ namespace ScorifyApp.Pages
 
         private async void UserRelationsButton_OnClicked(object sender, EventArgs e)
         {
-            var user = await ApiClient.GetUserDetails(UserContext.Current.User.Id); //TODO pass user id here
-            if (user != null)
+            var success = true;
+            try
             {
-                await Navigation.PushModalAsync(new UserDetailsPage(user));
+                var user = await ApiClient.GetUserDetails(UserContext.Current.User.Id); //TODO pass user id here
+                if (user != null)
+                {
+                    await Navigation.PushModalAsync(new UserDetailsPage(user));
+                }
             }
-            else
+            catch (Exception ex)
+            {
+                success = false;
+            }
+
+            if (!success)
             {
                 await DisplayAlert("Sorry", "Something went wrong and I cannot get your events", "Cancel");
             }
