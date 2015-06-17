@@ -10,10 +10,16 @@
       </StackLayout>
     <StackLayout Orientation="Horizontal">
       <Entry Placeholder="search" x:Name="SearchBox" HorizontalOptions="FillAndExpand" TextChanged="SearchBox_OnTextChanged"></Entry>
+      
+    </StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+      <Label FontSize="Medium" Text="Filters: "></Label>
       <StackLayout Orientation="Vertical" HorizontalOptions="End">
         <Button BackgroundColor="#6369D1" Text="finished" Clicked="Button_OnClicked"></Button>
-      </StackLayout>  
-    
+      </StackLayout>
+      <StackLayout Orientation="Vertical" HorizontalOptions="End">
+        <Button BackgroundColor="#6369D1" Text="by votes" Clicked="OrderByVotesButton_OnClicked" x:Name="OrderByVotesButton"></Button>
+      </StackLayout>
     </StackLayout>
     <ListView ItemsSource="{Binding Filtered}" x:Name="EventsList" HorizontalOptions="StartAndExpand" HasUnevenRows="True" ItemSelected="EventsList_OnItemSelected">
       <ListView.ItemTemplate>
@@ -28,6 +34,11 @@
                 <StackLayout Orientation="Horizontal">
                   <Label Text="{Binding User.Email,StringFormat='by {0}'}"></Label>
                   <Label Text="{Binding Discipline.Title,StringFormat='in {0}'}"></Label>  
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                  <Label Text="Votes: "></Label>
+                  <Label Text="{Binding Positive_Votes,StringFormat='+{0} / '}"></Label>
+                  <Label Text="{Binding Negative_Votes,StringFormat='-{0}'}"></Label>
                 </StackLayout>
                 <Label Text="{Binding Finished,StringFormat='Finished? {0}'}"></Label>
                 <Label Text="{Binding StartDateTime,StringFormat='Start @ {0}'}"></Label>

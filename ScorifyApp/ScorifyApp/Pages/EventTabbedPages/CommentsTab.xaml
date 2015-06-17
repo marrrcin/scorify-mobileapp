@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScorifyApp.Pages.EventTabbedPages.CommentsTab"
+             BackgroundColor="#050517">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="stream.png" HorizontalOptions="Start"></Image>
+      <Label Text="Comments" FontSize="Large" HorizontalOptions="Start" VerticalOptions="Center"></Label>
+      <ActivityIndicator VerticalOptions="Center" HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+      <Entry Placeholder="add your comment" x:Name="CommentTextBox" HorizontalOptions="FillAndExpand"></Entry>
+      <StackLayout Orientation="Vertical" HorizontalOptions="End">
+        <Button BackgroundColor="#6369D1" Text="send" x:Name="PostCommentButton"></Button>
+      </StackLayout>
+    
+    </StackLayout>
+    </StackLayout>
+</ContentPage>

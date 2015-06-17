@@ -26,6 +26,11 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             _buttonColor = UpdateButton.BackgroundColor;
 
 
+            InitializePage();
+        }
+
+        private void InitializePage()
+        {
             if (ViewModel.Event.Discipline.Title.Contains("race"))
             {
                 MultipleContendersBox.IsVisible = true;
@@ -35,8 +40,16 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             }
             else
             {
-                if (ViewModel.FirstContender != null) ViewModel.Score1 = ViewModel.FirstContender["score"].ToString();
-                if (ViewModel.SecondContender != null) ViewModel.Score2 = ViewModel.SecondContender["score"].ToString();
+                const string scoreKey = "score";
+                try
+                {
+                    ViewModel.Score1 = ViewModel.FirstContender[scoreKey].ToString();
+                    ViewModel.Score2 = ViewModel.SecondContender[scoreKey].ToString();
+                }
+                catch (Exception e)
+                {
+                    // f*** null reference
+                }
             }
         }
 
@@ -128,7 +141,7 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
         {
             if (isActive)
             {
-                UpdateButton.Text = "Sending...";
+                UpdateButton.Text = "Updating...";
                 UpdateButton.BackgroundColor = new Color(211 / 255.0, 183 / 255.0, 61 / 255.0, 1.0);
             }
             else

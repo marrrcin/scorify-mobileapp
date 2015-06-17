@@ -53,25 +53,37 @@ namespace ScorifyApp.Droid
 			public const int calendarSmall = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int description = 2130837506;
+			public const int comment = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int icon = 2130837507;
+			public const int description = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int message = 2130837508;
+			public const int down = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int newrelation = 2130837509;
+			public const int icon = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int profile = 2130837510;
+			public const int message = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int scorify = 2130837511;
+			public const int newrelation = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int stream = 2130837512;
+			public const int profile = 2130837512;
+			
+			// aapt resource value: 0x7f020009
+			public const int score = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public const int scorify = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public const int stream = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public const int up = 2130837516;
 			
 			static Drawable()
 			{

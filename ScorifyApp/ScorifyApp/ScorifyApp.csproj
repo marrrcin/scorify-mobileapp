@@ -57,6 +57,9 @@
     <Compile Include="Pages\EventPage.xaml.cs">
       <DependentUpon>EventPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EventTabbedPages\CommentsTab.xaml.cs">
+      <DependentUpon>CommentsTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EventTabbedPages\DescriptionTab.xaml.cs">
       <DependentUpon>DescriptionTab.xaml</DependentUpon>
     </Compile>
@@ -280,6 +283,19 @@
   <ItemGroup>
     <EmbeddedResource Include="Icons\score.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\comment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="Icons\down.png" />
+    <Content Include="Icons\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\EventTabbedPages\CommentsTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

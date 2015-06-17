@@ -152,25 +152,52 @@ namespace ScorifyApp.Pages
         }
 
 
-        private Color OldColor;
+        private Color OldFinishedColor;
         private async void Button_OnClicked(object sender, EventArgs e)
         {
             ShowFinished = !ShowFinished;
             var btn = sender as Button;
             if (ShowFinished)
             {
-                OldColor = btn.BackgroundColor;
+                OldFinishedColor = btn.BackgroundColor;
                 btn.BackgroundColor = new Color(254/255.0,95/255.0,85/255.0);
             }
             else
             {
-                btn.BackgroundColor = OldColor;
+                btn.BackgroundColor = OldFinishedColor;
             }
 
             IEnumerable<Event> filtered = null;
             try
             {
                 await Task.Factory.StartNew(() => filtered = FilterEvents(SearchBox.Text, ViewModel.Events.ToArray()));
+            }
+            catch (Exception)
+            {
+            }
+            ViewModel.Filtered = filtered ?? new Event[0];
+        }
+
+        private Color OldVoteColor;
+        private bool OrderByVotes;
+        private async void OrderByVotesButton_OnClicked(object sender, EventArgs e)
+        {
+            OrderByVotes = !OrderByVotes;
+            var btn = sender as Button;
+            if (OrderByVotes)
+            {
+                OldVoteColor = btn.BackgroundColor;
+                btn.BackgroundColor = new Color(254 / 255.0, 95 / 255.0, 85 / 255.0);
+            }
+            else
+            {
+                btn.BackgroundColor = OldVoteColor;
+            }
+
+            IEnumerable<Event> filtered = null;
+            try
+            {
+                await Task.Factory.StartNew(() => filtered = ViewModel.Events.OrderByDescending(ev=>ev.Positive_Votes/(ev.Negative_Votes+1)).ToArray());
             }
             catch (Exception)
             {

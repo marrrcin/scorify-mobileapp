@@ -30,6 +30,10 @@ namespace ScorifyApp.Models
         public string Id { get; set; }
 
         public string Discipline_Id { set; get; }
+
+        public int Positive_Votes { set; get; }
+
+        public int Negative_Votes { set; get; }
     }
 
     public class EventWrapper

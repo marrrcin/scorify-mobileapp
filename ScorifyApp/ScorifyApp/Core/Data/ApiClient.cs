@@ -26,7 +26,7 @@ namespace ScorifyApp.Core.Data
             return client;
         }
 
-        public static async Task<User> LogInUser(string provider, string token, string secret = null)
+        public static async Task<User> LogInUserAsync(string provider, string token, string secret = null)
         {
             try
             {
@@ -179,7 +179,7 @@ namespace ScorifyApp.Core.Data
                 return false;
             }
         }
-        public static async Task<IEnumerable<Message>> GetEventMessages(Event evnt,long? afterTimestamp = null)
+        public static async Task<IEnumerable<Message>> GetEventMessagesAsync(Event evnt,long? afterTimestamp = null)
         {
             try
             {
@@ -201,7 +201,7 @@ namespace ScorifyApp.Core.Data
             }
         }
 
-        public static async Task<bool> UpdateScore(Event evnt, Dictionary<string,object> contender,string score)
+        public static async Task<bool> UpdateScoreAsync(Event evnt, Dictionary<string,object> contender,string score)
         {
             try
             {
@@ -247,7 +247,7 @@ namespace ScorifyApp.Core.Data
             return false;
         }
 
-        public static async Task<User> GetUserDetails(string userId)
+        public static async Task<User> GetUserDetailsAsync(string userId)
         {
             try
             {
@@ -289,7 +289,7 @@ namespace ScorifyApp.Core.Data
             return disciplinesMapping;
         }
 
-        public static async Task<Event> GetEventDetails(Event evnt)
+        public static async Task<Event> GetEventDetailsAsync(Event evnt)
         {
             try
             {
@@ -351,6 +351,62 @@ namespace ScorifyApp.Core.Data
             }
 
             return true;
+        }
+
+        public static async Task<bool?> SendEventVote(Event evnt, bool isPositive)
+        {
+            try
+            {
+                var requestData = new
+                {
+                    votes = new Dictionary<string,bool>
+                    {
+                        {"positive?",isPositive}
+                    }
+                };
+
+                var request =
+                    GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + "/events/" + evnt.Id + "/votes")
+                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken);
+
+                var response = await request.PostJsonAsync(requestData);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return true;
+                }
+                else if(response.StatusCode == (HttpStatusCode)422)
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return false;
+        }
+
+        public static async Task<IEnumerable<Comment>> GetCommentsAsync(Event evnt, long? afterTimestamp = null)
+        {
+            try
+            {
+                var request = GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + @"/events/" + evnt.Id + @"/comments");
+                var response = await request.Url
+                    .SetQueryParam("after", afterTimestamp ?? 0)
+                    .WithHeader("Accept", @"application/vnd.scorify.v1")
+                    .GetJsonAsync<CommentCollection>();
+
+                foreach (var comment in response.Comments)
+                {
+                    comment.Created = comment.Timestamp.ToDateTime();
+                }
+                return response.Comments;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return new Comment[0];
+            }
         }
     }
 

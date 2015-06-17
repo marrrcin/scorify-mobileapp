@@ -6,9 +6,14 @@
              Title="Stream" BackgroundColor="#050517">
   <StackLayout>
     <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
-      <Image Source="stream.png" HorizontalOptions="Start"></Image>
+      <Image Source="comment.png" HorizontalOptions="Start"></Image>
       <Label Text="Stream" FontSize="Large" HorizontalOptions="Start" VerticalOptions="Center"></Label>
       <ActivityIndicator VerticalOptions="Center" HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+        <Label Text="Vote : "></Label>
+        <Image x:Name="VoteUpClickableImage" Source="up.png"></Image>
+        <Image x:Name="VoteDownClickableImage" Source="down.png"></Image>
     </StackLayout>
     <StackLayout Orientation="Vertical" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" Padding="0,0,0,15">
         <ListView ItemsSource="{Binding Messages}" x:Name="MessageList"  IsVisible="True" HasUnevenRows="True">
