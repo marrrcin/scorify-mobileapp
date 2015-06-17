@@ -123,6 +123,7 @@ namespace ScorifyApp.Core.LogIn
         public async Task Logout()
         {
             await FileStorage.SaveToFile(FileName, "");
+            LoggedIn = false;
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScorifyApp.Pages.WriteRelationTabbedPages.UpdateScoreTab"
+                          BackgroundColor="#050517">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
+      <Image Source="score.png" HorizontalOptions="Start"></Image>
+      <Label VerticalOptions="Center" Text="Update score" FontSize="Large" HorizontalOptions="StartAndExpand"></Label>
+    </StackLayout>
+    <StackLayout Orientation="Vertical" Padding="5,15,5,0">
+      <StackLayout Orientation="Vertical" x:Name="TwoContendersBox" IsVisible="True">
+        <Label Text="{Binding Contender1}"></Label>
+        <Label Text="vs."></Label>
+        <Label Text="{Binding Contender2}"></Label>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
+          <Label Text="{Binding Score1}" FontSize="Medium" ></Label>
+          <Label Text=":" FontSize="Medium"></Label>
+          <Label Text="{Binding Score2}" FontSize="Medium"></Label>
+        </StackLayout>
+        
+        <Label Text="Update score"></Label>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
+          <Entry Placeholder="0" x:Name="Score1Entry" Keyboard="Numeric"></Entry>
+          <Label Text=":" FontSize="Large"></Label>
+          <Entry Placeholder="0" x:Name="Score2Entry" Keyboard="Numeric"></Entry>
+        </StackLayout>
+      </StackLayout>
+      <StackLayout Orientation="Vertical" x:Name="MultipleContendersBox" IsVisible="False">
+        <!-- labels added from code behind -->
+      </StackLayout>
+      <Button Text="Update" BackgroundColor="#0DAB76" TextColor="White" x:Name="UpdateButton" Clicked="UpdateButton_OnClicked"></Button>
+    </StackLayout>
+  </StackLayout>
+</ContentPage>

@@ -17,5 +17,23 @@ namespace ScorifyApp.Pages.UserDetailsTabbedPages
             ViewModel = viewModel;
             BindingContext = ViewModel;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            try
+            {
+                var parent = Parent as CarouselPage;
+                if (parent != null)
+                {
+                    parent.CurrentPage = parent.Children[0];
+                    parent.ForceLayout();
+                }
+            }
+            catch (Exception)
+            {
+                // :D
+            }
+        }
     }
 }

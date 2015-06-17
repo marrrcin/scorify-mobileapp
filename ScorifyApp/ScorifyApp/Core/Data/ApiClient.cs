@@ -201,6 +201,52 @@ namespace ScorifyApp.Core.Data
             }
         }
 
+        public static async Task<bool> UpdateScore(Event evnt, Dictionary<string,object> contender,string score)
+        {
+            try
+            {
+                object requestData;
+                if (evnt.Discipline.Title.Contains("race"))
+                {
+                    requestData = new
+                    {
+                        contender = new
+                        {
+                            title = contender["title"],
+                            total_time = score
+                        }
+                    };
+                }
+                else
+                {
+                    requestData = new
+                    {
+                        contender = new
+                        {
+                            title = contender["title"],
+                            score = score
+                        }
+                    };
+                }
+
+                var request =
+                    GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + "/events/" + evnt.Id + "/contenders/" +
+                                             contender["id"])
+                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken);
+                var response = await request.PatchJsonAsync(requestData);
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return false;
+        }
+
         public static async Task<User> GetUserDetails(string userId)
         {
             try
@@ -214,7 +260,7 @@ namespace ScorifyApp.Core.Data
 
                 if (user.Events.Any())
                 {
-                    var disciplinesMapping = (await ApiClient.GetDisciplinesAsync()).ToDictionary(kvp=>kvp.Id,kvp=>kvp.Title);
+                    var disciplinesMapping = await GetDisciplinesMapping();
                     foreach (var evnt in user.Events)
                     {
                         ParseDates(evnt);
@@ -227,7 +273,7 @@ namespace ScorifyApp.Core.Data
                     }
                 }
 
-                
+
                 return user;
             }
             catch (Exception ex)
@@ -235,6 +281,39 @@ namespace ScorifyApp.Core.Data
                 Debug.WriteLine(ex.Message);
                 return null;
             }
+        }
+
+        private static async Task<Dictionary<string, string>> GetDisciplinesMapping()
+        {
+            var disciplinesMapping = (await ApiClient.GetDisciplinesAsync()).ToDictionary(kvp => kvp.Id, kvp => kvp.Title);
+            return disciplinesMapping;
+        }
+
+        public static async Task<Event> GetEventDetails(Event evnt)
+        {
+            try
+            {
+                var disciplineId = evnt.Discipline_Id;
+                var evntId = evnt.Id;
+                var request = GetFlurlClientForRequest(@"disciplines/" + disciplineId + @"/events/" + evntId);
+                var response = await request.GetJsonAsync<EventWrapper>();
+                if (response.Event != null)
+                {
+                    var disciplinesMapping = await GetDisciplinesMapping();
+                    var eventDetails = response.Event;
+                    eventDetails.Discipline = new Discipline
+                    {
+                        Id = disciplineId,
+                        Title = disciplinesMapping[evnt.Discipline_Id]
+                    };
+                    return response.Event;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return null;
         }
 
         private class UserWrapper
@@ -260,7 +339,7 @@ namespace ScorifyApp.Core.Data
                        .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
                        .PatchJsonAsync(requestData);
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.Created)
                 {
                     return false;
                 }

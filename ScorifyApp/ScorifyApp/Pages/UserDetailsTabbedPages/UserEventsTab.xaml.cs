@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScorifyApp.Core.Data;
 using ScorifyApp.Models;
 using ScorifyApp.ViewModels;
 using Xamarin.Forms;
@@ -25,7 +26,15 @@ namespace ScorifyApp.Pages.UserDetailsTabbedPages
             UserEventsList.SelectedItem = null;
             if (selected != null)
             {
-                await Navigation.PushModalAsync(new WriteRelationPage(selected));
+                var evnt = await ApiClient.GetEventDetails(selected);
+                if (evnt != null)
+                {
+                    await Navigation.PushModalAsync(new WriteRelationPage(evnt));
+                }
+                else
+                {
+                    await DisplayAlert("Could get event details", "Check your internet connection and try again later...", "OK");
+                }
             }
         }
     }

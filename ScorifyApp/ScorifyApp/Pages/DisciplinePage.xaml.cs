@@ -67,13 +67,25 @@ namespace ScorifyApp.Pages
                     selected.Discipline = ViewModel.Discipline;
                 }
 
+                if (selected.Discipline_Id == null)
+                {
+                    selected.Discipline_Id = ViewModel.Discipline.Id;
+                }
+
+                var evnt = await ApiClient.GetEventDetails(selected);
+                if (evnt == null)
+                {
+                    await DisplayAlert("Could get event details", "Check your internet connection and try again later...", "OK");
+                    return;
+                }
+
                 if (User != null)
                 {
-                    await Navigation.PushModalAsync(new WriteRelationPage(selected));
+                    await Navigation.PushModalAsync(new WriteRelationPage(evnt));
                 }
                 else
                 {
-                    await Navigation.PushModalAsync(new EventPage(selected));    
+                    await Navigation.PushModalAsync(new EventPage(evnt));    
                 }
                 
             }

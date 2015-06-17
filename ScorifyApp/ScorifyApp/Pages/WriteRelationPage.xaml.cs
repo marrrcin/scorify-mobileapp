@@ -26,6 +26,7 @@ namespace ScorifyApp.Pages
             Children.Add(new StreamTab(StreamViewModel));
             Children.Add(new DescriptionTab(StreamViewModel));
             Children.Add(new EditEventTab(evnt));
+            Children.Add(new UpdateScoreTab(StreamViewModel));
             BindingContext = ViewModel;
             int i = 0;
             Device.StartTimer(TimeSpan.FromMilliseconds(300), () =>

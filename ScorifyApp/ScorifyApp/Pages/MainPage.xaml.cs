@@ -99,6 +99,7 @@ namespace ScorifyApp.Pages
         {
             await ViewModel.FacebookLogin.Logout();
             await ViewModel.TwitterLogin.Logout();
+            UserContext.Reset();
             ViewModel.IsLoggedIn = false;
         }
 

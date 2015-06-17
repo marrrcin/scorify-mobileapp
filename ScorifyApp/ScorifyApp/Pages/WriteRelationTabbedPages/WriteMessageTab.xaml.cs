@@ -29,6 +29,20 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             base.OnAppearing();
             _buttonText = SendButton.Text;
             _buttonColor = SendButton.BackgroundColor;
+
+            try
+            {
+                var parent = Parent as CarouselPage;
+                if (parent != null)
+                {
+                    parent.CurrentPage = parent.Children[0];
+                    parent.ForceLayout();
+                }
+            }
+            catch (Exception)
+            {
+                // :D
+            }
         }
 
         private async void SendButton_OnClicked(object sender, EventArgs e)

@@ -32,6 +32,11 @@ namespace ScorifyApp.Models
         public string Discipline_Id { set; get; }
     }
 
+    public class EventWrapper
+    {
+        public Event Event { set; get; }
+    }
+
     public class EventsCollection
     {
         public IEnumerable<Event> Events { set; get; }

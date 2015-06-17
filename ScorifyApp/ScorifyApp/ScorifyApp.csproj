@@ -84,6 +84,9 @@
     <Compile Include="Pages\WriteRelationTabbedPages\EditEventTab.xaml.cs">
       <DependentUpon>EditEventTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\WriteRelationTabbedPages\UpdateScoreTab.xaml.cs">
+      <DependentUpon>UpdateScoreTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\WriteRelationTabbedPages\WriteMessageTab.xaml.cs">
       <DependentUpon>WriteMessageTab.xaml</DependentUpon>
     </Compile>
@@ -266,6 +269,17 @@
     <EmbeddedResource Include="Pages\WriteRelationTabbedPages\EditEventTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\WriteRelationTabbedPages\UpdateScoreTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\score.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

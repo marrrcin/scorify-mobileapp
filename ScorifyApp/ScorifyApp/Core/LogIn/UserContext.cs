@@ -37,5 +37,10 @@ namespace ScorifyApp.Core.LogIn
                 Current = new UserContext(user);
             }
         }
+
+        public static void Reset()
+        {
+            Current = null;
+        }
     }
 }
