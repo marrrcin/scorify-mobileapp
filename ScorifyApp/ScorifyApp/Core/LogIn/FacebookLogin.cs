@@ -78,7 +78,7 @@ namespace ScorifyApp.Core.LogIn
             var userInfo = await GetUserInfoAsync();
             UserEmail = userInfo.Email;
             UserId = userInfo.Id;
-            User = await ApiClient.LogInUser("facebook", Token);
+            User = await ApiClient.LogInUserAsync("facebook", Token);
             if (string.IsNullOrEmpty(User.Auth_Token))
             {
                 LoggedIn = false;

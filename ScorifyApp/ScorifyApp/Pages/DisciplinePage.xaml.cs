@@ -72,7 +72,7 @@ namespace ScorifyApp.Pages
                     selected.Discipline_Id = ViewModel.Discipline.Id;
                 }
 
-                var evnt = await ApiClient.GetEventDetails(selected);
+                var evnt = await ApiClient.GetEventDetailsAsync(selected);
                 if (evnt == null)
                 {
                     await DisplayAlert("Could get event details", "Check your internet connection and try again later...", "OK");

@@ -64,7 +64,10 @@ namespace ScorifyApp.Pages
                 
                 if (response)
                 {
-                    await Navigation.PushModalAsync(new WriteRelationPage(evnt));
+                    var ev = await ApiClient.GetEventDetailsAsync(evnt);
+                    ev.Discipline_Id = evnt.Discipline.Id;
+                    ev.Contenders = evnt.Contenders;
+                    await Navigation.PushModalAsync(new WriteRelationPage(ev));
                 }
                 else
                 {

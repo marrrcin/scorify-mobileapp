@@ -21,11 +21,21 @@ namespace ScorifyApp.Pages
             BindingContext = ViewModel;
             Children.Add(new StreamTab(ViewModel));
             Children.Add(new DescriptionTab(ViewModel));
+            Children.Add(new CommentsTab(ViewModel));
 
             foreach (var tab in Children)
             {
                 tab.BindingContext = BindingContext;
             }
+
+            int i = 0;
+            Device.StartTimer(TimeSpan.FromMilliseconds(300), () =>
+            {
+                ForceLayout();
+                OnCurrentPageChanged();
+                ++i;
+                return i <= 3;
+            });
         }
 
         protected override void OnAppearing()

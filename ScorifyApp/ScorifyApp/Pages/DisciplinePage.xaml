@@ -12,7 +12,7 @@
       <Entry Placeholder="search" x:Name="SearchBox" HorizontalOptions="FillAndExpand" TextChanged="SearchBox_OnTextChanged"></Entry>
       
     </StackLayout>
-    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
       <Label FontSize="Medium" Text="Filters: "></Label>
       <StackLayout Orientation="Vertical" HorizontalOptions="End">
         <Button BackgroundColor="#6369D1" Text="finished" Clicked="Button_OnClicked"></Button>

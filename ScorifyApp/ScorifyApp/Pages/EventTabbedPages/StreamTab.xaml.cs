@@ -25,7 +25,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
 
         private CancellationTokenSource ApiRequestCancel;
 
-        private int ApiPollDelayMilliseconds = 5500;
+        private int ApiPollDelayMilliseconds = 3000;
 
         private Task ApiPollTask = null;
 
@@ -42,28 +42,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
             BindingContext = viewModel;
             MessageList.BindingContext = ViewModel;
 
-            var tapEvent = new TapGestureRecognizer();
-            tapEvent.Tapped += tapEvent_Tapped;
-            VoteUpClickableImage.GestureRecognizers.Add(tapEvent);
-            VoteDownClickableImage.GestureRecognizers.Add(tapEvent);
-        }
-
-        async void tapEvent_Tapped(object sender, EventArgs e)
-        {
-            var img = sender as Image;
-            if(img == null)
-            {
-                return;
-            }
-
-            if (img == VoteUpClickableImage)
-            {
-                await MakeVote(true);
-            }
-            else if(img == VoteDownClickableImage)
-            {
-                await MakeVote(false);
-            }
+            
         }
 
         protected override async void OnAppearing()
@@ -72,7 +51,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
 
             //first request
             ActivityIndicator.IsVisible = true;
-            ViewModel.UpdateMessages(await ApiClient.GetEventMessages(ViewModel.Event));
+            ViewModel.UpdateMessages(await ApiClient.GetEventMessagesAsync(ViewModel.Event));
             ActivityIndicator.IsVisible = false;
 
             //message polling thread
@@ -84,7 +63,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
             , ApiRequestCancel.Token);
             
             //UI refreshing thread
-            Device.StartTimer(TimeSpan.FromMilliseconds(ApiPollDelayMilliseconds - 500.0),UpdateMessages);
+            Device.StartTimer(TimeSpan.FromMilliseconds(ApiPollDelayMilliseconds - 500.0),UpdateView);
             Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
             {
                 ActivityIndicator.IsVisible = IsPollingNow;
@@ -92,7 +71,7 @@ namespace ScorifyApp.Pages.EventTabbedPages
             });
         }
 
-        private bool UpdateMessages()
+        private bool UpdateView()
         {
             if (ShouldUpdateMessages && UpdatedMessages != null)
             {
@@ -127,20 +106,27 @@ namespace ScorifyApp.Pages.EventTabbedPages
             var messageComparer = new MessageComparer();
             while (ShouldPollApi)
             {
-                await Task.Delay(ApiPollDelayMilliseconds, ApiRequestCancel.Token);
-                IsPollingNow = true;
-                var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
-                var newMessages = await ApiClient.GetEventMessages(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
-                newMessages = newMessages.Except(viewModel.Messages, messageComparer);
-                lock (locker)
+                try
                 {
-                    UpdatedMessages = newMessages.ToArray();
-                    ShouldUpdateMessages = UpdatedMessages.Any();
+                    await Task.Delay(ApiPollDelayMilliseconds, ApiRequestCancel.Token);
+                    IsPollingNow = true;
+                    var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
+                    var newMessages = await ApiClient.GetEventMessagesAsync(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
+                    newMessages = newMessages.Except(viewModel.Messages, messageComparer);
+                    lock (locker)
+                    {
+                        UpdatedMessages = newMessages.ToArray();
+                        ShouldUpdateMessages = UpdatedMessages.Any();
+                    }
+                    IsPollingNow = false;
+                    if (ApiRequestCancel.IsCancellationRequested)
+                    {
+                        break;
+                    }
                 }
-                IsPollingNow = false;
-                if (ApiRequestCancel.IsCancellationRequested)
+                catch (Exception e)
                 {
-                    break;
+                    // :D
                 }
             }
             viewModel.IsRequesting = false;
@@ -159,26 +145,9 @@ namespace ScorifyApp.Pages.EventTabbedPages
             }
         }
 
-        private bool isBusy = false;
+       
 
-        private async Task MakeVote(bool isPositive)
-        {
-            if (isBusy)
-            {
-                return;
-            }
-            isBusy = true;
-            var response = await ApiClient.SendEventVote(ViewModel.Event, isPositive);
-            if (response == null)
-            {
-                await DisplayAlert("Hey!", "You've already voted!", "OK");
-            }
-            else if (response == false)
-            {
-                await DisplayAlert("Sorry", "Could not vote up at the moment", "OK");
-            }
-            isBusy = false;
-        }
+
 
     }
 }

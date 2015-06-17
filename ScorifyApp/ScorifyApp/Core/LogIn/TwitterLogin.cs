@@ -93,7 +93,7 @@ namespace ScorifyApp.Core.LogIn
                 var user = await UserAsync.GetLoggedUser();
                 UserId = user.IdStr;
                 UserEmail = user.ScreenName;
-                User = await ApiClient.LogInUser("twitter", Token, TokenSecret);
+                User = await ApiClient.LogInUserAsync("twitter", Token, TokenSecret);
                 if (User == null)
                 {
                     LoggedIn = false;

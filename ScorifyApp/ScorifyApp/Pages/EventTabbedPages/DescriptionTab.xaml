@@ -12,6 +12,12 @@
     <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Padding="20,20,20,20">
       <Label x:Name="DescriptionLabel" Text="{Binding Event.Description}" LineBreakMode="WordWrap"></Label>
     </StackLayout>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+      <Label Text="Vote : " FontSize="Large"></Label>
+      <Image x:Name="VoteUpClickableImage" Source="up.png"></Image>
+      <Label Text="  " FontSize="Large"></Label>
+      <Image x:Name="VoteDownClickableImage" Source="down.png"></Image>
+    </StackLayout>
   </StackLayout>
     
 </ContentPage>

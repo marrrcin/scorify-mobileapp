@@ -98,7 +98,7 @@ namespace ScorifyApp.ViewModels
 
         private bool _requestActive;
 
-        private ObservableCollection<Comment> _comments;
+        private ObservableCollection<Comment> _comments = new ObservableCollection<Comment>();
 
         public bool IsRequesting
         {
@@ -113,6 +113,12 @@ namespace ScorifyApp.ViewModels
             OnPropertyChanged("Messages");
         }
 
+        public void UpdateComments(IEnumerable<Comment> newComments)
+        {
+            newComments.ForEach(cmnt=>_comments.Insert(0,cmnt));
+            OnPropertyChanged("Comments");
+        }
+
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
@@ -122,7 +128,7 @@ namespace ScorifyApp.ViewModels
         public ObservableCollection<Comment> Comments
         {
             get { return _comments; }
-            set { _comment = value; OnPropertyChanged(); }
+            set { _comments = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

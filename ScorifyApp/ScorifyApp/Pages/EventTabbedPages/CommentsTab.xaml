@@ -5,16 +5,35 @@
              BackgroundColor="#050517">
   <StackLayout>
     <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
-      <Image Source="stream.png" HorizontalOptions="Start"></Image>
+      <Image Source="comment.png" HorizontalOptions="Start"></Image>
       <Label Text="Comments" FontSize="Large" HorizontalOptions="Start" VerticalOptions="Center"></Label>
       <ActivityIndicator VerticalOptions="Center" HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
     </StackLayout>
-    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="0,0,10,0">
       <Entry Placeholder="add your comment" x:Name="CommentTextBox" HorizontalOptions="FillAndExpand"></Entry>
       <StackLayout Orientation="Vertical" HorizontalOptions="End">
-        <Button BackgroundColor="#6369D1" Text="send" x:Name="PostCommentButton"></Button>
+        <Button BackgroundColor="#6369D1" Text="send" x:Name="PostCommentButton" Clicked="PostCommentButton_OnClicked"></Button>
+      </StackLayout>
+    </StackLayout>
+      <StackLayout Orientation="Vertical" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" Padding="0,0,0,15">
+        <ListView ItemsSource="{Binding Comments}" x:Name="CommentList"  IsVisible="True" HasUnevenRows="True">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <ViewCell.View>
+                  <StackLayout Orientation="Vertical" Padding="5,0,0,0">
+                    <Label Text="{Binding Content}" Font="Medium" XAlign="Start" TextColor="#6369D1"></Label>
+                    <StackLayout Orientation="Horizontal">
+                      <Label Text="{Binding Created,StringFormat='on {0}'}"></Label>
+                      <Label Text="{Binding User_Email,StringFormat=' by {0}'}"></Label>
+                    </StackLayout>
+                  </StackLayout>
+                </ViewCell.View>
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
       </StackLayout>
     
-    </StackLayout>
     </StackLayout>
 </ContentPage>

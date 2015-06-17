@@ -293,7 +293,7 @@ namespace ScorifyApp.Core.Data
         {
             try
             {
-                var disciplineId = evnt.Discipline_Id;
+                var disciplineId = evnt.Discipline_Id ?? evnt.Discipline.Id;
                 var evntId = evnt.Id;
                 var request = GetFlurlClientForRequest(@"disciplines/" + disciplineId + @"/events/" + evntId);
                 var response = await request.GetJsonAsync<EventWrapper>();
@@ -304,7 +304,7 @@ namespace ScorifyApp.Core.Data
                     eventDetails.Discipline = new Discipline
                     {
                         Id = disciplineId,
-                        Title = disciplinesMapping[evnt.Discipline_Id]
+                        Title = disciplinesMapping[disciplineId]
                     };
                     return response.Event;
                 }
@@ -359,7 +359,7 @@ namespace ScorifyApp.Core.Data
             {
                 var requestData = new
                 {
-                    votes = new Dictionary<string,bool>
+                    vote = new Dictionary<string,bool>
                     {
                         {"positive?",isPositive}
                     }
@@ -370,23 +370,20 @@ namespace ScorifyApp.Core.Data
                         .WithHeader("Authorization", UserContext.Current.AuthorizationToken);
 
                 var response = await request.PostJsonAsync(requestData);
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.Created)
                 {
                     return true;
-                }
-                else if(response.StatusCode == (HttpStatusCode)422)
-                {
-                    return null;
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                return null;
             }
             return false;
         }
 
-        public static async Task<IEnumerable<Comment>> GetCommentsAsync(Event evnt, long? afterTimestamp = null)
+        public static async Task<IEnumerable<Comment>> GetEventCommentsAsync(Event evnt, long? afterTimestamp = null)
         {
             try
             {
@@ -407,6 +404,37 @@ namespace ScorifyApp.Core.Data
                 Debug.WriteLine(e.Message);
                 return new Comment[0];
             }
+        }
+
+        public static async Task<bool?> PostCommentAsync(Event evnt, string commentText)
+        {
+            try
+            {
+                var requestData = new
+                {
+                    comment = new
+                    {
+                        content = commentText
+                    }
+                };
+                var request = GetFlurlClientForRequest(@"disciplines/" + evnt.Discipline.Id + @"/events/" + evnt.Id + @"/comments");
+                var response = await request.Url
+                    .WithHeader("Accept", @"application/vnd.scorify.v1")
+                    .WithHeader("Authorization", UserContext.Current.AuthorizationToken)
+                    .PostJsonAsync(requestData);
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
+            return false;
         }
     }
 

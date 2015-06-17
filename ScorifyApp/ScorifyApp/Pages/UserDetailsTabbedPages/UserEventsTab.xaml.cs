@@ -26,7 +26,7 @@ namespace ScorifyApp.Pages.UserDetailsTabbedPages
             UserEventsList.SelectedItem = null;
             if (selected != null)
             {
-                var evnt = await ApiClient.GetEventDetails(selected);
+                var evnt = await ApiClient.GetEventDetailsAsync(selected);
                 if (evnt != null)
                 {
                     await Navigation.PushModalAsync(new WriteRelationPage(evnt));

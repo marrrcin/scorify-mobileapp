@@ -61,10 +61,10 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             {
                 var contenderData =
                     ViewModel.Event.Contenders.FirstOrDefault(ct => (string) ct["title"] == c);
-                string time = "0:00";
+                string time = "0.00";
                 if (contenderData.ContainsKey("total_time"))
                 {
-                    time = contenderData["total_time"] as string;
+                    time = contenderData["total_time"].ToString();
                 }
 
                 var editScorePanel = new StackLayout
@@ -77,6 +77,13 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
                     Text = c,
                     FontSize = 16.0
                 });
+
+                editScorePanel.Children.Add(new Label
+                {
+                    Text = time,
+                    FontSize = 16.0
+                });
+
                 editScorePanel.Children.Add(new Entry
                 {
                     Placeholder = "0:00"
@@ -113,7 +120,7 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
 
                 foreach (var update in toUpdate)
                 {
-                    success &= await ApiClient.UpdateScore(ViewModel.Event, update.contender, update.score);
+                    success &= await ApiClient.UpdateScoreAsync(ViewModel.Event, update.contender, update.score);
                     if (!success)
                     {
                         break;
@@ -122,13 +129,23 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             }
             else
             {
-                success &= await ApiClient.UpdateScore(ViewModel.Event, ViewModel.FirstContender, Score1Entry.Text);
-                success &= await ApiClient.UpdateScore(ViewModel.Event, ViewModel.SecondContender, Score2Entry.Text);
+                success &= await ApiClient.UpdateScoreAsync(ViewModel.Event, ViewModel.FirstContender, Score1Entry.Text);
+                success &= await ApiClient.UpdateScoreAsync(ViewModel.Event, ViewModel.SecondContender, Score2Entry.Text);
             }
 
             if (!success)
             {
                 await DisplayAlert("Sorry", "Could not update score", "OK");
+            }
+            else
+            {
+                var updated = await ApiClient.GetEventDetailsAsync(ViewModel.Event);
+                if (updated != null)
+                {
+                    ViewModel.Event.Contenders = updated.Contenders;
+                    InitializePage();
+                }
+                
             }
             IsActive = false;
             UpdateActivity(IsActive);

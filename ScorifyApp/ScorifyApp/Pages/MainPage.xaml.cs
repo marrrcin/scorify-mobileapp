@@ -171,7 +171,7 @@ namespace ScorifyApp.Pages
             var success = true;
             try
             {
-                var user = await ApiClient.GetUserDetails(UserContext.Current.User.Id); //TODO pass user id here
+                var user = await ApiClient.GetUserDetailsAsync(UserContext.Current.User.Id); //TODO pass user id here
                 if (user != null)
                 {
                     await Navigation.PushModalAsync(new UserDetailsPage(user));

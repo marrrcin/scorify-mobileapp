@@ -47,6 +47,7 @@
     <Compile Include="Core\LogIn\TwitterApiData.cs" />
     <Compile Include="Core\LogIn\TwitterLogin.cs" />
     <Compile Include="Core\LogIn\UserContext.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Discipline.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Message.cs" />
