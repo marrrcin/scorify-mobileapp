@@ -59,37 +59,48 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             
             ViewModel.Contenders.ForEach(c =>
             {
-                var contenderData =
-                    ViewModel.Event.Contenders.FirstOrDefault(ct => (string) ct["title"] == c);
-                string time = "0.00";
-                if (contenderData.ContainsKey("total_time"))
-                {
-                    time = contenderData["total_time"].ToString();
-                }
-
-                var editScorePanel = new StackLayout
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    HorizontalOptions = LayoutOptions.FillAndExpand
-                };
-                editScorePanel.Children.Add(new Label
-                {
-                    Text = c,
-                    FontSize = 16.0
-                });
-
-                editScorePanel.Children.Add(new Label
-                {
-                    Text = time,
-                    FontSize = 16.0
-                });
-
-                editScorePanel.Children.Add(new Entry
-                {
-                    Placeholder = "0:00"
-                });
+                var time = GetTimeScore(c);
+                var editScorePanel = PrepareScorePanel(c, time);
                 multipleContendersBox.Children.Add(editScorePanel); 
             });
+        }
+
+        private string GetTimeScore(string c)
+        {
+            var contenderData =
+                ViewModel.Event.Contenders.FirstOrDefault(ct => (string) ct["title"] == c);
+            string time = "0:00";
+            if (contenderData.ContainsKey("total_time"))
+            {
+                time = contenderData["total_time"].ToString();
+            }
+            return time;
+        }
+
+        private static StackLayout PrepareScorePanel(string c, string time)
+        {
+            var editScorePanel = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            editScorePanel.Children.Add(new Label
+            {
+                Text = c,
+                FontSize = 16.0
+            });
+
+            editScorePanel.Children.Add(new Label
+            {
+                Text = time,
+                FontSize = 16.0
+            });
+
+            editScorePanel.Children.Add(new Entry
+            {
+                Placeholder = "0:00"
+            });
+            return editScorePanel;
         }
 
         private async void UpdateButton_OnClicked(object sender, EventArgs e)
@@ -104,19 +115,25 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
             bool success = true;
             if (MultipleContendersBox.IsVisible)
             {
-                var toUpdate = MultipleContendersBox.Children.Where(c => c is StackLayout).Cast<StackLayout>().Select(sp =>
-                {
-                    var label = sp.Children.FirstOrDefault(x => x is Label) as Label;
-                    var score = sp.Children.FirstOrDefault(x => x is Entry) as Entry;
-                    var contenderData = ViewModel.Event.Contenders.FirstOrDefault(ct => (string)ct["title"] == label.Text);
-                    double scoreTime = 0.0;
-                    double.TryParse(score.Text, out scoreTime);
-                    return new
+                var toUpdate =
+                    MultipleContendersBox.Children.Where(c => c is StackLayout).Cast<StackLayout>().Select(sp =>
                     {
-                        contender = contenderData,
-                        score = scoreTime.ToString()
-                    };
-                });
+                        var label = sp.Children.FirstOrDefault(x => x is Label) as Label;
+                        var score = sp.Children.FirstOrDefault(x => x is Entry) as Entry;
+                        if (string.IsNullOrEmpty(score.Text))
+                        {
+                            return null;
+                        }
+                        var contenderData =
+                            ViewModel.Event.Contenders.FirstOrDefault(ct => (string) ct["title"] == label.Text);
+                        double scoreTime = 0.0;
+                        double.TryParse(score.Text, out scoreTime);
+                        return new
+                        {
+                            contender = contenderData,
+                            score = scoreTime.ToString()
+                        };
+                    }).Where(s=>s != null);
 
                 foreach (var update in toUpdate)
                 {
@@ -144,6 +161,7 @@ namespace ScorifyApp.Pages.WriteRelationTabbedPages
                 {
                     ViewModel.Event.Contenders = updated.Contenders;
                     InitializePage();
+                    ViewModel.ScoreUpdateRequired = true;
                 }
                 
             }

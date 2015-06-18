@@ -6,12 +6,27 @@
              Title="Stream" BackgroundColor="#050517">
   <StackLayout>
     <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="#6369D1" Padding="5,5,5,5">
-      <Image Source="comment.png" HorizontalOptions="Start"></Image>
+      <Image Source="stream.png" HorizontalOptions="Start"></Image>
       <Label Text="Stream" FontSize="Large" HorizontalOptions="Start" VerticalOptions="Center"></Label>
       <ActivityIndicator VerticalOptions="Center" HorizontalOptions="End" IsRunning="True" IsVisible="False" x:Name="ActivityIndicator"></ActivityIndicator>
     </StackLayout>
-    <StackLayout x:Name="ScoreStackLayout" Orientation="Vertical">
-      
+    <StackLayout Orientation="Vertical" Padding="5,15,5,0">
+      <StackLayout Orientation="Vertical" x:Name="TwoContendersBox" IsVisible="True">
+        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" >
+          <Label Text="{Binding Contender1}" FontSize="Large"></Label>
+          <Label Text="vs."></Label>
+          <Label Text="{Binding Contender2}" FontSize="Large"></Label>
+        </StackLayout>
+        
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
+          <Label Text="{Binding Score1}" FontSize="Large" ></Label>
+          <Label Text=":" FontSize="Large"></Label>
+          <Label Text="{Binding Score2}" FontSize="Large"></Label>
+        </StackLayout>
+      </StackLayout>
+      <StackLayout Orientation="Vertical" x:Name="MultipleContendersStackLayout" IsVisible="False">
+        <!-- labels added from code behind -->
+      </StackLayout>
     </StackLayout>
     <StackLayout Orientation="Vertical" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" Padding="0,0,0,15">
         <ListView ItemsSource="{Binding Messages}" x:Name="MessageList"  IsVisible="True" HasUnevenRows="True">

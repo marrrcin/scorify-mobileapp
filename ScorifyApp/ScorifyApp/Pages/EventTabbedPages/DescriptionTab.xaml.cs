@@ -61,7 +61,11 @@ namespace ScorifyApp.Pages.EventTabbedPages
             }
             else if (response == false)
             {
-                await DisplayAlert("Sorry", "Could not vote up at the moment", "OK");
+                await DisplayAlert("Sorry", "Could not vote at the moment", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Success", "You have voted!", "OK");
             }
             isBusy = false;
         }

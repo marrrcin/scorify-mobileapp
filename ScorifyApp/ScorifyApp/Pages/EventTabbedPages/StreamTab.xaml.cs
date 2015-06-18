@@ -23,6 +23,8 @@ namespace ScorifyApp.Pages.EventTabbedPages
 
         private volatile bool IsPollingNow = false;
 
+        private volatile bool ShouldUpdateScore = false;
+
         private CancellationTokenSource ApiRequestCancel;
 
         private int ApiPollDelayMilliseconds = 3000;
@@ -33,6 +35,8 @@ namespace ScorifyApp.Pages.EventTabbedPages
 
         private IEnumerable<Message> UpdatedMessages = null;
 
+        private IEnumerable<Dictionary<string, object>> UpdatedContenders = null;
+
         private object locker = new object();
 
         public StreamTab(EventPageViewModel viewModel)
@@ -41,8 +45,6 @@ namespace ScorifyApp.Pages.EventTabbedPages
             ViewModel = viewModel;
             BindingContext = viewModel;
             MessageList.BindingContext = ViewModel;
-
-            
         }
 
         protected override async void OnAppearing()
@@ -54,14 +56,14 @@ namespace ScorifyApp.Pages.EventTabbedPages
             ViewModel.UpdateMessages(await ApiClient.GetEventMessagesAsync(ViewModel.Event));
             ActivityIndicator.IsVisible = false;
 
-            //message polling thread
+            //event polling thread
             ApiRequestCancel = new CancellationTokenSource();
             ApiPollTask = Task.Factory.StartNew(async () =>
             {
                 await ApiRequest();
             }
             , ApiRequestCancel.Token);
-            
+
             //UI refreshing thread
             Device.StartTimer(TimeSpan.FromMilliseconds(ApiPollDelayMilliseconds - 500.0),UpdateView);
             Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
@@ -69,9 +71,57 @@ namespace ScorifyApp.Pages.EventTabbedPages
                 ActivityIndicator.IsVisible = IsPollingNow;
                 return ShouldPollApi;
             });
+
+            InitializeScores();
+        }
+
+        private void InitializeScores()
+        {
+            if (ViewModel.Event.Discipline.Title.Contains("race"))
+            {
+                MultipleContendersStackLayout.IsVisible = true;
+                TwoContendersBox.IsVisible = false;
+
+                UpdateMultipleContendersPanel(MultipleContendersStackLayout);
+            }
+            else
+            {
+                const string scoreKey = "score";
+                try
+                {
+                    ViewModel.Score1 = ViewModel.FirstContender[scoreKey].ToString();
+                    ViewModel.Score2 = ViewModel.SecondContender[scoreKey].ToString();
+                }
+                catch (Exception e)
+                {
+                    // f*** null reference
+                }
+            }
         }
 
         private bool UpdateView()
+        {
+            UpdateMessagesView();
+            UpdateScoreView();
+            return ShouldPollApi;
+        }
+
+        private void UpdateScoreView()
+        {
+            if (ShouldUpdateScore && UpdatedContenders != null)
+            {
+                lock (locker)
+                {
+                    ViewModel.Event.Contenders = UpdatedContenders;
+                    UpdatedContenders = null;
+                    ShouldUpdateScore = false;
+                    ViewModel.ScoreUpdateRequired = false;
+                    InitializeScores();
+                }
+            }
+        }
+
+        private void UpdateMessagesView()
         {
             if (ShouldUpdateMessages && UpdatedMessages != null)
             {
@@ -80,12 +130,57 @@ namespace ScorifyApp.Pages.EventTabbedPages
                     ViewModel.UpdateMessages(UpdatedMessages);
                     UpdatedMessages = null;
                     ShouldUpdateMessages = false;
-                    MessageList.ScrollTo(ViewModel.Messages.FirstOrDefault(),ScrollToPosition.Start,true);
+                    MessageList.ScrollTo(ViewModel.Messages.FirstOrDefault(), ScrollToPosition.Start, true);
                     ForceLayout();
                 }
             }
-            return ShouldPollApi;
         }
+
+        private void UpdateMultipleContendersPanel(StackLayout multipleContendersBox)
+        {
+            multipleContendersBox.Children.Clear();
+
+            ViewModel.Contenders.ForEach(c =>
+            {
+                var time = GetTimeScore(c);
+                var editScorePanel = PrepareScorePanel(c, time);
+                multipleContendersBox.Children.Add(editScorePanel);
+            });
+        }
+
+        private string GetTimeScore(string c)
+        {
+            var contenderData =
+                ViewModel.Event.Contenders.FirstOrDefault(ct => (string)ct["title"] == c);
+            string time = "0:00";
+            if (contenderData.ContainsKey("total_time"))
+            {
+                time = contenderData["total_time"].ToString();
+            }
+            return time;
+        }
+
+        private static StackLayout PrepareScorePanel(string c, string time)
+        {
+            var editScorePanel = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
+            editScorePanel.Children.Add(new Label
+            {
+                Text = c,
+                FontSize = 16.0
+            });
+
+            editScorePanel.Children.Add(new Label
+            {
+                Text = time + " seconds",
+                FontSize = 16.0
+            });
+            return editScorePanel;
+        }
+
 
         protected override void OnDisappearing()
         {
@@ -110,14 +205,8 @@ namespace ScorifyApp.Pages.EventTabbedPages
                 {
                     await Task.Delay(ApiPollDelayMilliseconds, ApiRequestCancel.Token);
                     IsPollingNow = true;
-                    var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
-                    var newMessages = await ApiClient.GetEventMessagesAsync(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
-                    newMessages = newMessages.Except(viewModel.Messages, messageComparer);
-                    lock (locker)
-                    {
-                        UpdatedMessages = newMessages.ToArray();
-                        ShouldUpdateMessages = UpdatedMessages.Any();
-                    }
+                    await PollMessages(viewModel, messageComparer);
+                    await PollScore(viewModel);
                     IsPollingNow = false;
                     if (ApiRequestCancel.IsCancellationRequested)
                     {
@@ -130,6 +219,51 @@ namespace ScorifyApp.Pages.EventTabbedPages
                 }
             }
             viewModel.IsRequesting = false;
+        }
+
+        private async Task PollScore(EventPageViewModel viewModel)
+        {
+            var eventDetails = await ApiClient.GetEventDetailsAsync(viewModel.Event);
+            if (eventDetails != null)
+            {
+                if (eventDetails.Contenders.Any(ScoreChanged(viewModel)) || ViewModel.ScoreUpdateRequired)
+                {
+                    lock (locker)
+                    {
+                        ShouldUpdateScore = true;
+                        UpdatedContenders = eventDetails.Contenders;
+                    }
+                }
+            }
+        }
+
+        private static Func<Dictionary<string, object>, bool> ScoreChanged(EventPageViewModel viewModel)
+        {
+            return c =>
+            {
+                var ctdr = viewModel.Event.Contenders.FirstOrDefault(cd => cd["title"].ToString() == c["title"].ToString());
+                if (ctdr.ContainsKey("score"))
+                {
+                    return ctdr["score"].ToString() != c["score"].ToString();
+                }
+                else
+                {
+                    return ctdr["total_time"].ToString() != c["total_time"].ToString();
+                }
+            };
+        }
+
+        private async Task PollMessages(EventPageViewModel viewModel, MessageComparer messageComparer)
+        {
+            var lastMessage = viewModel.Messages.OrderBy(msg => msg.Timestamp).LastOrDefault();
+            var newMessages =
+                await ApiClient.GetEventMessagesAsync(viewModel.Event, lastMessage != null ? lastMessage.Timestamp : 0);
+            newMessages = newMessages.Except(viewModel.Messages, messageComparer);
+            lock (locker)
+            {
+                UpdatedMessages = newMessages.ToArray();
+                ShouldUpdateMessages = UpdatedMessages.Any();
+            }
         }
 
         private class MessageComparer : IEqualityComparer<Message>

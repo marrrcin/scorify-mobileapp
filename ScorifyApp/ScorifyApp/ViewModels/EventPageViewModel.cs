@@ -131,6 +131,8 @@ namespace ScorifyApp.ViewModels
             set { _comments = value; OnPropertyChanged(); }
         }
 
+        public bool ScoreUpdateRequired { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

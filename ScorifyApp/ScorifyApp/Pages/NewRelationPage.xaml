@@ -6,22 +6,25 @@
     <StackLayout BackgroundColor="#6369D1" HorizontalOptions="Fill" Orientation="Horizontal" Padding="5,5,5,5">
       <Image Source="newrelation.png" HorizontalOptions="Start"></Image><Label Text="Create new relation" FontSize="Large" VerticalOptions="Center"></Label>
       </StackLayout>
-    <StackLayout Orientation="Vertical" Padding="15,15,15,15">
-      <Label Text="Title"></Label>
-      <Entry x:Name="TitleTextBox" Text="{Binding Title}"></Entry>
-      <Label Text="Desciption"></Label>
-      <Entry x:Name="DescriptionTextBox" Text="{Binding Description}"></Entry>
-      <Label Text="Venue"></Label>
-      <Entry x:Name="VenueTextBox" Text="{Binding Venue}"></Entry>
-      <Label Text="Start date"></Label>
-      <DatePicker x:Name="StartDatePicker" DateSelected="StartDatePicker_OnDateSelected"></DatePicker>
-      <TimePicker x:Name="StartTimePicker" IsVisible="True" Time="{Binding StartTime}"></TimePicker>
-      <Label Text="End date"></Label>
-      <DatePicker x:Name="EndDatePicker" DateSelected="EndDatePicker_OnDateSelected"></DatePicker>
-      <TimePicker x:Name="EndTimePicker" IsVisible="True" Time="{Binding EndTime}"></TimePicker>
-      <Label Text="Contenders (comma separated)"></Label>
-      <Entry x:Name="ContendersTextBox" Text="{Binding Contenders}"></Entry>
-      <Button Text="Create" x:Name="CreateButton" BackgroundColor="#0DAB76" TextColor="White" Clicked="CreateButton_OnClicked"></Button>
-    </StackLayout>
+    <ScrollView Orientation="Vertical" Padding="15,15,15,15">
+      <StackLayout Orientation="Vertical" >
+        <Label Text="Title"></Label>
+        <Entry x:Name="TitleTextBox" Text="{Binding Title}"></Entry>
+        <Label Text="Desciption"></Label>
+        <Entry x:Name="DescriptionTextBox" Text="{Binding Description}"></Entry>
+        <Label Text="Venue"></Label>
+        <Entry x:Name="VenueTextBox" Text="{Binding Venue}"></Entry>
+        <Label Text="Start date"></Label>
+        <DatePicker x:Name="StartDatePicker" DateSelected="StartDatePicker_OnDateSelected"></DatePicker>
+        <TimePicker x:Name="StartTimePicker" IsVisible="True" Time="{Binding StartTime}"></TimePicker>
+        <Label Text="End date"></Label>
+        <DatePicker x:Name="EndDatePicker" DateSelected="EndDatePicker_OnDateSelected"></DatePicker>
+        <TimePicker x:Name="EndTimePicker" IsVisible="True" Time="{Binding EndTime}"></TimePicker>
+        <Label Text="Contenders (comma separated)"></Label>
+        <Entry x:Name="ContendersTextBox" Text="{Binding Contenders}"></Entry>
+        <Button Text="Create" x:Name="CreateButton" BackgroundColor="#0DAB76" TextColor="White" Clicked="CreateButton_OnClicked"></Button>
+      </StackLayout>
+    </ScrollView>
+
   </StackLayout>
 </ContentPage>

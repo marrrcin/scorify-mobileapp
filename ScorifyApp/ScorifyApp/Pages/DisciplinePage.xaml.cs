@@ -51,7 +51,8 @@ namespace ScorifyApp.Pages
             }
             else
             {
-                ViewModel.Events = User.Events;
+                var userProfile = await ApiClient.GetUserDetailsAsync(User.Id);
+                ViewModel.Events = userProfile.Events;
             }
             ViewModel.Filtered = ViewModel.Events.Where(ev => ev.Finished == ShowFinished);
         }
@@ -197,7 +198,18 @@ namespace ScorifyApp.Pages
             IEnumerable<Event> filtered = null;
             try
             {
-                await Task.Factory.StartNew(() => filtered = ViewModel.Events.OrderByDescending(ev=>ev.Positive_Votes/(ev.Negative_Votes+1)).ToArray());
+                if (OrderByVotes)
+                {
+                    await Task.Factory.StartNew(() => filtered = FilterEvents(SearchBox.Text, ViewModel.Events.ToArray())
+                     .OrderByDescending(ev => ev.Positive_Votes / (ev.Negative_Votes + 1)).ToArray());
+                }
+                else
+                {
+                    await Task.Factory.StartNew(() => filtered = FilterEvents(SearchBox.Text, ViewModel.Events.ToArray())
+                    .OrderByDescending(ev => ev.StartDateTime).ToArray());
+                }
+                
+                
             }
             catch (Exception)
             {
