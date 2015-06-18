@@ -31,7 +31,11 @@ namespace ScorifyApp.Core.LogIn
                     TokenSecret = twitterLogin.TokenSecret;
                     LoggedIn = true;
                     UserId = twitterLogin.UserId;
-                    TwitterCredentials.SetCredentials(Token,TokenSecret,TwitterApi.ConsumerKey,TwitterApi.ConsumerSecret);
+                    UserEmail = twitterLogin.UserEmail;
+                    User = twitterLogin.User;
+                    UserContext.Initialize(User);
+                    TwitterCredentials.SetCredentials(Token, TokenSecret, TwitterApi.ConsumerKey, TwitterApi.ConsumerSecret);
+                    LoggedIn = true;
                 }
             }
             triedFromFile = true;
